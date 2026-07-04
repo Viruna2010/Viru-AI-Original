@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <!-- Mobile responsive meta tag (prevents zooming issues on mobile) -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Sathi AI</title>
+<title>VIRU AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Sans+Sinhala:wght@400;500;700&family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 <style>
@@ -136,7 +136,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
         <span class="material-icons-outlined menu-btn" onclick="toggleSidebar()">menu</span>
         <div class="brand" onclick="handleLogoTap()">
           <span class="material-icons-outlined" style="background:linear-gradient(135deg,var(--accent1),var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">auto_awesome</span>
-          Sathi AI
+          VIRU AI
         </div>
       </div>
       <div class="auth-status" id="authArea"></div>
@@ -146,7 +146,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 
     <div class="footer-container">
       <div class="input-wrapper">
-        <input type="text" id="userInput" placeholder="Ask Sathi AI..." onkeypress="checkEnter(event)">
+        <input type="text" id="userInput" placeholder="Ask VIRU AI..." onkeypress="checkEnter(event)">
         <button class="send-btn" onclick="sendMessage()"><span class="material-icons-outlined">send</span></button>
       </div>
     </div>
@@ -192,26 +192,30 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 const STRINGS = {
   si: { newchat:"නව කතාබස", recent:"මෑත කතාබස්", settings:"සැකසුම්", admintitle:"අයිතිකරු සත්‍යාපනය", adminsub:"සීමිත ප්‍රවේශය", loginbtn:"ඇතුල් වන්න", cancel:"අවලංගු කරන්න",
     settingstitle:"සැකසුම්", langlabel:"භාෂාව", displayname:"නම පෙන්වන ආකාරය", savebtn:"සුරකින්න", close:"වසන්න",
-    welcome:"ආයුබෝවන්! මම Sathi AI. මම නිර්මාණය කළේ Sathini Sithsandi විසිනි. අද මම ඔබට උදව් කරන්නේ කෙසේද? ✨",
-    placeholder:"Sathi AI ගෙන් අහන්න...", ownerMode:"අයිතිකරු මාදිලිය සක්‍රියයි", logout:"ඉවත් වන්න", wrongCreds:"වැරදි දත්ත! ඔබ සත්‍ය අයිතිකරු නොවේ නම් කරුණාකර ඉවත් වන්න.",
-    networkErr:"⚠️ ජාල දෝෂයකි. සම්බන්ධතාවය නැතිවිය.", errOccurred:"⚠️ දෝෂයක් ඇතිවිය:" },
+    welcome:"ආයුබෝවන්! මම VIRU AI. මම නිර්මාණය කළේ Viruna Randinu විසිනි. අද මම ඔබට උදව් කරන්නේ කෙසේද? ✨",
+    placeholder:"VIRU AI ගෙන් අහන්න...", ownerMode:"අයිතිකරු මාදිලිය සක්‍රියයි", logout:"ඉවත් වන්න", wrongCreds:"වැරදි දත්ත! ඔබ සත්‍ය අයිතිකරු නොවේ නම් කරුණාකර ඉවත් වන්න.",
+    networkErr:"⚠️ ජාල දෝෂයකි. සම්බන්ධතාවය නැතිවිය.", errOccurred:"⚠️ දෝෂයක් ඇතිවිය:",
+    limitMsg:"අම්මෝ මචං, ඔයාගේ පණිවිඩ සීමාව පැනලා තියෙන්නේ! 🚫 (විනාඩියකට 8යි / දවසකට 80යි). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑" },
   en: { newchat:"New chat", recent:"Recent Chats", settings:"Settings", admintitle:"Owner Authentication", adminsub:"Restricted access", loginbtn:"Login", cancel:"Cancel",
     settingstitle:"Settings", langlabel:"Language", displayname:"Display name", savebtn:"Save", close:"Close",
-    welcome:"Hello! I'm Sathi AI, created by Sathini Sithsandi. How can I help you today? ✨",
-    placeholder:"Ask Sathi AI...", ownerMode:"Owner Mode Active", logout:"Logout", wrongCreds:"Incorrect credentials! Please leave if you are not the real owner.",
-    networkErr:"⚠️ Network error. Connection lost.", errOccurred:"⚠️ Error occurred:" },
+    welcome:"Hello! I'm VIRU AI, created by Viruna Randinu. How can I help you today? ✨",
+    placeholder:"Ask VIRU AI...", ownerMode:"Owner Mode Active", logout:"Logout", wrongCreds:"Incorrect credentials! Please leave if you are not the real owner.",
+    networkErr:"⚠️ Network error. Connection lost.", errOccurred:"⚠️ Error occurred:",
+    limitMsg:"Whoa there! You've hit your message limit! 🚫 (Max 8 per min / 80 per day). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑" },
   ta: { newchat:"புதிய அரட்டை", recent:"சமீபத்திய அரட்டைகள்", settings:"அமைப்புகள்", admintitle:"உரிமையாளர் அங்கீகாரம்", adminsub:"கட்டுப்படுத்தப்பட்ட அணுகல்", loginbtn:"உள்நுழைய", cancel:"ரத்து செய்",
     settingstitle:"அமைப்புகள்", langlabel:"மொழி", displayname:"காட்சி பெயர்", savebtn:"சேமி", close:"மூடு",
-    welcome:"வணக்கம்! நான் Sathi AI, Sathini Sithsandi என்பவரால் உருவாக்கப்பட்டேன். இன்று உங்களுக்கு எப்படி உதவ முடியும்? ✨",
-    placeholder:"Sathi AI யிடம் கேளுங்கள்...", ownerMode:"உரிமையாளர் முறை செயலில்", logout:"வெளியேறு", wrongCreds:"தவறான தகவல்கள்! நீங்கள் உண்மையான உரிமையாளர் இல்லை என்றால் வெளியேறவும்.",
-    networkErr:"⚠️ பிணைய பிழை. இணைப்பு துண்டிக்கப்பட்டது.", errOccurred:"⚠️ பிழை ஏற்பட்டது:" },
+    welcome:"வணக்கம்! நான் VIRU AI, Viruna Randinu என்பவரால் உருவாக்கப்பட்டேன். இன்று உங்களுக்கு எப்படி உதவ முடியும்? ✨",
+    placeholder:"VIRU AI யிடம் கேளுங்கள்...", ownerMode:"உரிமையாளர் முறை செயலில்", logout:"வெளியேறு", wrongCreds:"தவறான தகவல்கள்! நீங்கள் உண்மையான உரிமையாளர் இல்லை என்றால் வெளியேறவும்.",
+    networkErr:"⚠️ பிணைய பிழை. இணைப்பு துண்டிக்கப்பட்டது.", errOccurred:"⚠️ பிழை ஏற்பட்டது:",
+    limitMsg:"உங்கள் செய்தி வரம்பு முடிந்துவிட்டது! 🚫 (நிமிடத்திற்கு 8 / நாளுக்கு 80). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑" },
   sg: { newchat:"New chat", recent:"Recent Chats", settings:"Settings", admintitle:"Owner Login", adminsub:"Restricted access", loginbtn:"Login", cancel:"Cancel",
     settingstitle:"Settings", langlabel:"Language", displayname:"Display name", savebtn:"Save", close:"Close",
-    welcome:"Ayubowan! Mama Sathi AI. Mawa haduwe Sathini Sithsandi. Ada mama oyata kohomada help karanne? ✨",
-    placeholder:"Sathi AI gen ahanna...", ownerMode:"Owner Mode Active", logout:"Logout", wrongCreds:"Wrong details! If oya owner nemei nam please ivath wenna.",
-    networkErr:"⚠️ Network error wuna. Connection nathiwuna.", errOccurred:"⚠️ Error ekak una:" }
+    welcome:"Ayubowan! Mama VIRU AI. Mawa haduwe Viruna Randinu. Ada mama oyata kohomada help karanne? ✨",
+    placeholder:"VIRU AI gen ahanna...", ownerMode:"Owner Mode Active", logout:"Logout", wrongCreds:"Wrong details! If oya owner nemei nam please ivath wenna.",
+    networkErr:"⚠️ Network error wuna. Connection nathiwuna.", errOccurred:"⚠️ Error ekak una:",
+    limitMsg:"Ammo macho, oyage message limit eka panala! 🚫 (Vinadiyakata 8i / Dawasakata 80i). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑" }
 };
-let currentLang = localStorage.getItem("sathi_lang") || "en";
+let currentLang = localStorage.getItem("viru_lang") || "en";
 
 function applyLanguage(){
   const s = STRINGS[currentLang];
@@ -233,16 +237,16 @@ function applyLanguage(){
 }
 function setLanguage(lang){
   currentLang = lang;
-  localStorage.setItem("sathi_lang", lang);
+  localStorage.setItem("viru_lang", lang);
   applyLanguage();
 }
 
 // ===================== State =====================
 const CLOUDFLARE_API_URL = "/api/chat";
-let chatSessions = JSON.parse(localStorage.getItem("sathi_chat_sessions")) || [];
-let activeChatId = localStorage.getItem("sathi_active_chat_id") || null;
-let isOwnerLoggedIn = JSON.parse(localStorage.getItem("sathi_is_owner")) || false;
-let displayName = localStorage.getItem("sathi_display_name") || "Viruna";
+let chatSessions = JSON.parse(localStorage.getItem("viru_chat_sessions")) || [];
+let activeChatId = localStorage.getItem("viru_active_chat_id") || null;
+let isOwnerLoggedIn = JSON.parse(localStorage.getItem("viru_is_owner")) || false;
+let displayName = localStorage.getItem("viru_display_name") || "Viruna";
 
 // ===================== Mobile UI & Admin Tap/Key Logic =====================
 function toggleSidebar(){
@@ -321,7 +325,7 @@ function startNewChat(){
 function loadChatSession(id){
   closeSidebar(); // auto close on mobile
   activeChatId = id;
-  localStorage.setItem("sathi_active_chat_id", id);
+  localStorage.setItem("viru_active_chat_id", id);
   document.querySelectorAll('.history-item').forEach(item=>{
     item.classList.toggle('active', item.dataset.id === id);
   });
@@ -446,10 +450,54 @@ async function sendMessage(){
     currentChat.title = prompt.length>24 ? prompt.substring(0,24)+"..." : prompt;
     renderSidebar();
   }
+  
+  // Render User Message First
   currentChat.messages.push({role:"user", text:prompt});
   renderMessageUI("user", prompt);
   inputField.value = "";
   saveState(); scrollToBottom();
+
+  // ==========================================
+  // STRICT RATE LIMITING LOGIC (Free Users Only)
+  // ==========================================
+  if (!isOwnerLoggedIn) {
+    const now = new Date();
+    // Unique string for current minute and current day
+    const currentMin = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes();
+    const currentDay = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
+
+    let savedMin = localStorage.getItem("viru_min_timestamp");
+    let savedDay = localStorage.getItem("viru_day_timestamp");
+    let countMin = parseInt(localStorage.getItem("viru_msg_count_min") || "0");
+    let countDay = parseInt(localStorage.getItem("viru_msg_count_day") || "0");
+
+    // Reset minute counter if a new minute started
+    if (savedMin !== currentMin) {
+      countMin = 0;
+      localStorage.setItem("viru_min_timestamp", currentMin);
+    }
+    
+    // Reset daily counter if a new day started
+    if (savedDay !== currentDay) {
+      countDay = 0;
+      localStorage.setItem("viru_day_timestamp", currentDay);
+    }
+
+    // Check Limits (Max 8 per min, Max 80 per day)
+    if (countMin >= 8 || countDay >= 80) {
+      const limitMessage = STRINGS[currentLang].limitMsg;
+      currentChat.messages.push({role: "model", text: limitMessage});
+      renderMessageUI("model", limitMessage);
+      saveState(); 
+      scrollToBottom();
+      return; // Stop execution, do not call API
+    }
+
+    // If limits not exceeded, increment counters and save
+    localStorage.setItem("viru_msg_count_min", countMin + 1);
+    localStorage.setItem("viru_msg_count_day", countDay + 1);
+  }
+  // ==========================================
 
   const container = document.getElementById("chatContainer");
   const loadingRow = document.createElement("div");
@@ -495,11 +543,12 @@ function closeLoginModal(){ document.getElementById("loginModal").classList.remo
 function handleLogin(){
   const user = document.getElementById("usernameInput").value.trim();
   const pass = document.getElementById("passwordInput").value.trim();
-  if (user === "sathini" && pass === "2013"){
+  // Owner Login Details updated to Viruna Randinu
+  if (user === "viruna" && pass === "2010"){
     isOwnerLoggedIn = true;
     displayName = user;
-    localStorage.setItem("sathi_is_owner", true);
-    localStorage.setItem("sathi_display_name", displayName);
+    localStorage.setItem("viru_is_owner", true);
+    localStorage.setItem("viru_display_name", displayName);
     closeLoginModal();
     updateAuthUI();
     document.getElementById("usernameInput").value = "";
@@ -512,7 +561,7 @@ function handleLogin(){
 
 function handleLogout(){
   isOwnerLoggedIn = false;
-  localStorage.setItem("sathi_is_owner", false);
+  localStorage.setItem("viru_is_owner", false);
   updateAuthUI();
   loadChatSession(activeChatId);
 }
@@ -541,15 +590,15 @@ function closeSettingsModal(){ document.getElementById("settingsModal").classLis
 function saveSettings(){
   if (isOwnerLoggedIn){
     const val = document.getElementById("displayNameInput").value.trim();
-    if (val){ displayName = val; localStorage.setItem("sathi_display_name", displayName); }
+    if (val){ displayName = val; localStorage.setItem("viru_display_name", displayName); }
   }
   closeSettingsModal();
   loadChatSession(activeChatId);
 }
 
 function saveState(){
-  localStorage.setItem("sathi_chat_sessions", JSON.stringify(chatSessions));
-  localStorage.setItem("sathi_active_chat_id", activeChatId);
+  localStorage.setItem("viru_chat_sessions", JSON.stringify(chatSessions));
+  localStorage.setItem("viru_active_chat_id", activeChatId);
 }
 function scrollToBottom(){
   const container = document.getElementById("chatContainer");
