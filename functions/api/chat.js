@@ -6,8 +6,19 @@ export async function onRequestPost(context) {
         // Frontend එකෙන් එවන lang එක සහ අනෙක් දත්ත ගන්නවා
         const { historyPayload, isOwnerLoggedIn, lang } = body;
 
-        // Server එකෙන්ම ලංකාවේ හරියටම වෙලාව සහ දිනය ගන්නවා
-        const srilankaTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
+        // Server එකෙන්ම ලංකාවේ හරියටම වෙලාව සහ දිනය 100% නිවැරදි Format එකෙන් ගන්නවා
+        const now = new Date();
+        const srilankaTime = now.toLocaleString("en-US", {
+            timeZone: "Asia/Colombo",
+            weekday: 'long',   // දවස හරියටම (e.g., Saturday, Sunday) තනි වචනයෙන්ම ගන්නවා
+            year: 'numeric',   // වර්ෂය
+            month: 'long',     // මාසය ලියුම් ක්‍රමයට (e.g., July)
+            day: 'numeric',    // දිනය
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true       // AM/PM ක්‍රමයට
+        });
 
         // ==========================================
         // LANGUAGE ENFORCEMENT DEFINITIONS
