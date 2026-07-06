@@ -14,8 +14,9 @@
   --text:#e8e9ea; --text-dim:#9a9ea3; --gold:#f2b01f;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Google Sans','Noto Sans Sinhala','Noto Sans Tamil',sans-serif;-webkit-tap-highlight-color:transparent;}
-body{background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;}
-.app-container{display:flex;width:100%;height:100vh;position:relative;}
+/* Changed height to 100dvh to fix mobile viewport issues */
+body{background:var(--bg);color:var(--text);display:flex;height:100dvh;overflow:hidden;}
+.app-container{display:flex;width:100%;height:100dvh;position:relative;}
 
 /* Sidebar */
 aside{width:280px;background:var(--bg-elev);display:flex;flex-direction:column;padding:16px;border-right:1px solid var(--border);transition:transform 0.3s ease;z-index:100;height:100%;}
@@ -41,7 +42,8 @@ aside{width:280px;background:var(--bg-elev);display:flex;flex-direction:column;p
 .sidebar-link:hover{background:var(--bg-elev2);color:var(--text);}
 
 /* Main Content */
-main{flex:1;display:flex;flex-direction:column;height:100vh;background:var(--bg);position:relative;transition:all 0.3s ease;overflow:hidden;}
+/* Changed height to 100dvh */
+main{flex:1;display:flex;flex-direction:column;height:100dvh;background:var(--bg);position:relative;transition:all 0.3s ease;overflow:hidden;}
 header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);height:65px;flex-shrink:0;}
 .brand{font-size:20px;font-weight:500;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
 .menu-btn{color:var(--text-dim);cursor:pointer;margin-right:15px;display:none;}
@@ -72,7 +74,8 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 .inline-code{background:#252729;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:13.5px;color:var(--gold);}
 
 /* Input Footer */
-.footer-container{padding:15px 15% 20px;flex-shrink:0;}
+/* Added safe-area-inset to prevent navigation bar overlapping */
+.footer-container{padding:15px 15% calc(20px + env(safe-area-inset-bottom));flex-shrink:0;}
 .input-wrapper{max-width:850px;margin:0 auto;display:flex;align-items:center;background:var(--bg-elev);border:1px solid var(--border);border-radius:28px;padding:8px 8px 8px 18px;}
 #userInput{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15.5px;padding:8px;}
 #userInput::placeholder{color:var(--text-dim);}
@@ -112,7 +115,8 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
   aside{position:fixed;left:0;top:0;transform:translateX(-100%);}
   aside.open{transform:translateX(0);}
   .menu-btn{display:block;}
-  .chat-container,.footer-container{padding-left:15px;padding-right:15px;}
+  .chat-container{padding-left:15px;padding-right:15px;}
+  .footer-container{padding-left:15px;padding-right:15px;padding-bottom:calc(20px + env(safe-area-inset-bottom));}
   header{padding:16px 15px;}
 }
 </style>
@@ -288,17 +292,19 @@ document.addEventListener("keydown", function(e){
   }
 });
 
-// Triple tap for Mobile
+// 5 Taps for Mobile Admin Panel
 let logoTapCount = 0;
 let logoTapTimer;
 function handleLogoTap() {
   logoTapCount++;
   clearTimeout(logoTapTimer);
-  if (logoTapCount >= 3) {
+  // Changed to 5 taps
+  if (logoTapCount >= 5) {
     openLoginModal();
     logoTapCount = 0;
   } else {
-    logoTapTimer = setTimeout(() => { logoTapCount = 0; }, 1000);
+    // Increased timeout to 2000ms to give enough time to tap 5 times
+    logoTapTimer = setTimeout(() => { logoTapCount = 0; }, 2000);
   }
 }
 
