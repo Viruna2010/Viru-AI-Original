@@ -61,7 +61,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 .message-content{flex:1;font-size:15.5px;line-height:1.65;user-select:text;}
 .message-text-block{white-space:pre-wrap;margin-bottom:8px;}
 
-/* Video Generation Card & Progress Bar */
+/* Video Card & 60s Progress Bar */
 .video-card{background:var(--bg-elev);border:1px solid var(--border);border-radius:16px;padding:20px;max-width:380px;margin-top:10px;box-shadow:0 8px 24px rgba(0,0,0,0.4);}
 .video-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:13px;color:var(--text-dim);}
 .video-card-title{font-weight:bold;color:#38bdf8;display:flex;align-items:center;gap:6px;}
@@ -85,10 +85,12 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 
 /* Input Footer */
 .footer-container{padding:15px 15% calc(20px + env(safe-area-inset-bottom));flex-shrink:0;}
-.input-wrapper{max-width:850px;margin:0 auto;display:flex;align-items:center;background:var(--bg-elev);border:1px solid var(--border);border-radius:28px;padding:8px 8px 8px 18px;}
-#userInput{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15.5px;padding:8px;user-select:text;}
+.input-wrapper{max-width:850px;margin:0 auto;display:flex;align-items:center;background:var(--bg-elev);border:1px solid var(--border);border-radius:28px;padding:6px 8px 6px 12px;gap:8px;}
+.plus-btn{background:var(--bg-elev2);border:none;color:#38bdf8;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.2s;flex-shrink:0;}
+.plus-btn:hover{background:#38bdf8;color:#0e0f10;}
+#userInput{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15.5px;padding:8px 4px;user-select:text;}
 #userInput::placeholder{color:var(--text-dim);}
-.send-btn{background:linear-gradient(135deg,var(--accent1),var(--accent3));border:none;color:#fff;cursor:pointer;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
+.send-btn{background:linear-gradient(135deg,var(--accent1),var(--accent3));border:none;color:#fff;cursor:pointer;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0;}
 .send-btn:hover{filter:brightness(1.1);}
 
 /* Loading Animation */
@@ -100,12 +102,13 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 /* Modals */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .2s ease;}
 .modal-overlay.active{opacity:1;pointer-events:auto;}
-.modal-card{background:var(--bg-elev);padding:30px;border-radius:18px;width:90%;max-width:380px;border:1px solid var(--border);display:flex;flex-direction:column;gap:14px;}
-.modal-card h3{font-size:19px;font-weight:500;text-align:center;margin-bottom:6px;}
-.modal-card p.sub{font-size:12.5px;color:var(--text-dim);text-align:center;margin-top:-10px;margin-bottom:4px;}
-.modal-card input{background:#0e0f10;border:1px solid var(--border);border-radius:9px;padding:12px;color:#fff;font-size:14.5px;outline:none;}
-.modal-card input:focus{border-color:var(--accent1);}
-.modal-card button.primary{background:linear-gradient(135deg,var(--accent1),var(--accent3));border:none;color:#fff;padding:12px;border-radius:9px;font-size:14.5px;font-weight:500;cursor:pointer;margin-top:6px;}
+.modal-card{background:var(--bg-elev);padding:26px;border-radius:18px;width:90%;max-width:390px;border:1px solid var(--border);display:flex;flex-direction:column;gap:14px;}
+.modal-card h3{font-size:19px;font-weight:500;text-align:center;}
+.modal-card p.sub{font-size:12.5px;color:var(--text-dim);text-align:center;margin-top:-8px;}
+.modal-card input, .modal-card textarea{background:#0e0f10;border:1px solid var(--border);border-radius:9px;padding:12px;color:#fff;font-size:14.5px;outline:none;}
+.modal-card textarea{height:85px;resize:none;}
+.modal-card input:focus, .modal-card textarea:focus{border-color:var(--accent1);}
+.modal-card button.primary{background:linear-gradient(135deg,var(--accent1),var(--accent3));border:none;color:#fff;padding:12px;border-radius:9px;font-size:14.5px;font-weight:500;cursor:pointer;}
 .modal-card button.primary:hover{filter:brightness(1.1);}
 .close-modal{text-align:center;color:var(--text-dim);font-size:13px;cursor:pointer;}
 .close-modal:hover{color:#fff;}
@@ -157,11 +160,23 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 
     <div class="footer-container">
       <div class="input-wrapper">
+        <button class="plus-btn" onclick="openVideoModal()" title="Generate AI Video (9:16)"><span class="material-icons-outlined">add</span></button>
         <input type="text" id="userInput" placeholder="Ask VIRU AI or type /video <prompt>..." onkeypress="checkEnter(event)">
         <button class="send-btn" onclick="sendMessage()"><span class="material-icons-outlined">send</span></button>
       </div>
     </div>
   </main>
+</div>
+
+<!-- Video Generation Modal (+ Button) -->
+<div class="modal-overlay" id="videoModal">
+  <div class="modal-card">
+    <h3>🎬 VIRU AI Video Studio</h3>
+    <p class="sub">Create 9:16 Vertical Video (Reels/Shorts)</p>
+    <textarea id="videoModalPrompt" placeholder="Describe the video you want to generate (e.g. A futuristic sports car speeding on neon bridge in rain)..."></textarea>
+    <button class="primary" onclick="submitVideoModal()">Generate Video 🚀</button>
+    <div class="close-modal" onclick="closeVideoModal()">Cancel</div>
+  </div>
 </div>
 
 <!-- Admin login modal -->
@@ -200,25 +215,16 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 
 <script>
 // =========================================================================
-// 🔒 ADVANCED SECURITY PROTOCOL: DEVTOOLS & INSPECT PROTECTION
+// 🔒 DEVTOOLS & SOURCE PROTECTION
 // =========================================================================
 document.addEventListener('contextmenu', e => e.preventDefault());
-
 document.addEventListener('keydown', function(e) {
-  // Block F12
-  if (e.key === "F12" || e.keyCode === 123) {
-    e.preventDefault();
-    return false;
-  }
-  // Block Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U, Ctrl+S
+  if (e.key === "F12" || e.keyCode === 123) { e.preventDefault(); return false; }
   if (e.ctrlKey && (e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c') || e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's')) {
-    e.preventDefault();
-    return false;
+    e.preventDefault(); return false;
   }
-  // Block Meta (Mac) Cmd+Opt+I / Cmd+Opt+J / Cmd+U
   if (e.metaKey && (e.altKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j') || e.key === 'U' || e.key === 'u')) {
-    e.preventDefault();
-    return false;
+    e.preventDefault(); return false;
   }
 });
 
@@ -226,32 +232,32 @@ document.addEventListener('keydown', function(e) {
 const STRINGS = {
   si: { newchat:"නව කතාබස", recent:"මෑත කතාබස්", settings:"සැකසුම්", admintitle:"අයිතිකරු සත්යාපනය", adminsub:"සීමිත ප්රවේශය", loginbtn:"ඇතුල් වන්න", cancel:"අවලංගු කරන්න",
     settingstitle:"සැකසුම්", langlabel:"භාෂාව", displayname:"නම පෙන්වන ආකාරය", savebtn:"සුරකින්න", close:"වසන්න",
-    welcome:"ආයුබෝවන්! මම VIRU AI. මම නිර්මාණය කළේ Viruna Randinu විසිනි. අද මම ඔබට උදව් කරන්නේ කෙසේද? ✨\n\n*(වීඩියෝවක් සෑදීමට 'video ekak hadapan <prompt>' හෝ '/video <prompt>' ලෙස Type කරන්න)* 🎬",
+    welcome:"ආයුබෝවන්! මම VIRU AI. මම නිර්මාණය කළේ Viruna Randinu විසිනි. අද මම ඔබට උදව් කරන්නේ කෙසේද? ✨\n\n*(වීඩියෝවක් සෑදීමට වම් පැත්තේ '+' button එක ඔබන්න හෝ '/video <prompt>' ලෙස Type කරන්න)* 🎬",
     placeholder:"VIRU AI ගෙන් අහන්න...", ownerMode:"අයිතිකරු මාදිලිය සක්රියයි", logout:"ඉවත් වන්න", wrongCreds:"වැරදි දත්ත! ඔබ සත්ය අයිතිකරු නොවේ නම් කරුණාකර ඉවත් වන්න.",
     networkErr:"⚠️ ජාල දෝෂයකි. සම්බන්ධතාවය නැතිවිය.", errOccurred:"⚠️ දෝෂයක් ඇතිවිය:",
     limitMsg:"අම්මෝ මචං, ඔයාගේ පණිවිඩ සීමාව පැනලා තියෙන්නේ! 🚫 (විනාඩියකට 8යි / දවසකට 80යි). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑",
-    videoGenTitle:"VIRU AI Video Generator (9:16)", videoRendering:"වීඩියෝව නිර්මාණය වෙමින් පවතී...", videoComplete:"වීඩියෝව සාර්ථකව නිර්මාණය විය! 🎉" },
+    videoFeedback:"ඔන්න මචං ඔයා ඉල්ලපු Video එක ලෑස්තියි! 🎬🔥 කොහොමද Video එක? පට්ටද? 😎✨ තව වීඩියෝ එකක් ඕන නම් කියන්න! 🚀👑" },
   en: { newchat:"New chat", recent:"Recent Chats", settings:"Settings", admintitle:"Owner Authentication", adminsub:"Restricted access", loginbtn:"Login", cancel:"Cancel",
     settingstitle:"Settings", langlabel:"Language", displayname:"Display name", savebtn:"Save", close:"Close",
-    welcome:"Hello! I'm VIRU AI, created by Viruna Randinu. How can I help you today? ✨\n\n*(To generate a video, type 'make a video <prompt>' or '/video <prompt>')* 🎬",
+    welcome:"Hello! I'm VIRU AI, created by Viruna Randinu. How can I help you today? ✨\n\n*(To generate a video, click the '+' icon on the left or type '/video <prompt>')* 🎬",
     placeholder:"Ask VIRU AI...", ownerMode:"Owner Mode Active", logout:"Logout", wrongCreds:"Incorrect credentials! Please leave if you are not the real owner.",
     networkErr:"⚠️ Network error. Connection lost.", errOccurred:"⚠️ Error occurred:",
     limitMsg:"Whoa there! You've hit your message limit! 🚫 (Max 8 per min / 80 per day). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑",
-    videoGenTitle:"VIRU AI Video Generator (9:16)", videoRendering:"Rendering neural video...", videoComplete:"Video successfully rendered! 🎉" },
+    videoFeedback:"Here is your generated video! 🎬🔥 How does it look? Amazing right? 😎✨ Let me know if you want another one! 🚀👑" },
   ta: { newchat:"புதிய அரட்டை", recent:"சமீபத்திய அரட்டைகள்", settings:"அமைப்புகள்", admintitle:"உரிமையாளர் அங்கீகாரம்", adminsub:"கட்டுப்படுத்தப்பட்ட அணுகல்", loginbtn:"உள்நுழைய", cancel:"ரத்து செய்",
     settingstitle:"அமைப்புகள்", langlabel:"மொழி", displayname:"காட்சி பெயர்", savebtn:"சேமி", close:"மூடு",
     welcome:"வணக்கம்! நான் VIRU AI, Viruna Randinu என்பவரால் உருவாக்கப்பட்டேன். இன்று உங்களுக்கு எப்படி உதவ முடியும்? ✨",
     placeholder:"VIRU AI யிடம் கேளுங்கள்...", ownerMode:"உரிமையாளர் முறை செயலில்", logout:"வெளியேறு", wrongCreds:"தவறான தகவல்கள்! நீங்கள் உண்மையான உரிமையாளர் இல்லை என்றால் வெளியேறவும்.",
     networkErr:"⚠️ பிணைய பிழை. இணைப்பு துண்டிக்கப்பட்டது.", errOccurred:"⚠️ பிழை ஏற்பட்டது:",
     limitMsg:"உங்கள் செய்தி வரம்பு முடிந்துவிட்டது! 🚫 (நிமிடத்திற்கு 8 / நாளுக்கு 80). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑",
-    videoGenTitle:"VIRU AI Video Generator (9:16)", videoRendering:"வீடியோ உருவாக்கப்படுகிறது...", videoComplete:"வீடியோ தயாராக உள்ளது! 🎉" },
+    videoFeedback:"உங்கள் வீடியோ தயாராக உள்ளது! 🎬🔥 எப்படி இருக்கிறது? 😎✨" },
   sg: { newchat:"New chat", recent:"Recent Chats", settings:"Settings", admintitle:"Owner Login", adminsub:"Restricted access", loginbtn:"Login", cancel:"Cancel",
     settingstitle:"Settings", langlabel:"Language", displayname:"Display name", savebtn:"Save", close:"Close",
-    welcome:"Ayubowan! Mama VIRU AI. Mawa haduwe Viruna Randinu. Ada mama oyata kohomada help karanne? ✨\n\n*(Video ekak hadanna 'video ekak hadapan <prompt>' or '/video <prompt>' kiyala gahanna)* 🎬",
+    welcome:"Ayubowan! Mama VIRU AI. Mawa haduwe Viruna Randinu. Ada mama oyata kohomada help karanne? ✨\n\n*(Video ekak hadanna wam paththe '+' icon eka obanna or '/video <prompt>' kiyala gahanna)* 🎬",
     placeholder:"VIRU AI gen ahanna...", ownerMode:"Owner Mode Active", logout:"Logout", wrongCreds:"Wrong details! If oya owner nemei nam please ivath wenna.",
     networkErr:"⚠️ Network error wuna. Connection nathiwuna.", errOccurred:"⚠️ Error ekak una:",
     limitMsg:"Ammo macho, oyage message limit eka panala! 🚫 (Vinadiyakata 8i / Dawasakata 80i). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑",
-    videoGenTitle:"VIRU AI Video Generator (9:16)", videoRendering:"Video eka generate wenawa macho...", videoComplete:"Menna video eka ready macho! 🎉" }
+    videoFeedback:"Onna macho oyage video eka ready! 🎬🔥 Kohomada video eka? Pattada? 😎✨ Thawa ekak onanam kiyanna macho! 🚀👑" }
 };
 let currentLang = localStorage.getItem("viru_lang") || "en";
 
@@ -279,10 +285,10 @@ function setLanguage(lang){
   applyLanguage();
 }
 
-// ===================== State & Endpoints =====================
+// ===================== Endpoints & State =====================
 const CLOUDFLARE_CHAT_URL = "/api/chat";
 const CLOUDFLARE_AUTH_URL = "/api/auth";
-const VIRU_VIDEO_API_URL = "https://video-genarator-api.vercel.app/api/generate";
+const VIDEO_API_URL = "/api/video";
 
 let chatSessions = JSON.parse(localStorage.getItem("viru_chat_sessions")) || [];
 let activeChatId = localStorage.getItem("viru_active_chat_id") || null;
@@ -294,15 +300,9 @@ function toggleSidebar(){
   const sidebar = document.getElementById("sidebar");
   const overlay = document.getElementById("sidebarOverlay");
   const isOpen = sidebar.classList.contains("open");
-  if(isOpen){
-    sidebar.classList.remove("open");
-    overlay.classList.remove("active");
-  } else {
-    sidebar.classList.add("open");
-    overlay.classList.add("active");
-  }
+  if(isOpen){ sidebar.classList.remove("open"); overlay.classList.remove("active"); }
+  else { sidebar.classList.add("open"); overlay.classList.add("active"); }
 }
-
 function closeSidebar(){
   if(window.innerWidth <= 768){
     document.getElementById("sidebar").classList.remove("open");
@@ -310,46 +310,34 @@ function closeSidebar(){
   }
 }
 
-// Secret sequence for PC
+// Admin secret sequence
 const SECRET_SEQUENCE = "admin";
 let typedBuffer = "";
 document.addEventListener("keydown", function(e){
   const active = document.activeElement;
-  const isTyping = active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA");
-  if (isTyping) return;
+  if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) return;
   if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
     typedBuffer += e.key.toLowerCase();
-    if (typedBuffer.length > SECRET_SEQUENCE.length) {
-      typedBuffer = typedBuffer.slice(-SECRET_SEQUENCE.length);
-    }
-    if (typedBuffer === SECRET_SEQUENCE) {
-      openLoginModal();
-      typedBuffer = "";
-    }
+    if (typedBuffer.length > SECRET_SEQUENCE.length) typedBuffer = typedBuffer.slice(-SECRET_SEQUENCE.length);
+    if (typedBuffer === SECRET_SEQUENCE) { openLoginModal(); typedBuffer = ""; }
   }
 });
 
-// 5 Taps on Mobile Logo
 let logoTapCount = 0;
 let logoTapTimer;
 function handleLogoTap() {
   logoTapCount++;
   clearTimeout(logoTapTimer);
-  if (logoTapCount >= 5) {
-    openLoginModal();
-    logoTapCount = 0;
-  } else {
-    logoTapTimer = setTimeout(() => { logoTapCount = 0; }, 2000);
-  }
+  if (logoTapCount >= 5) { openLoginModal(); logoTapCount = 0; }
+  else { logoTapTimer = setTimeout(() => { logoTapCount = 0; }, 2000); }
 }
 
 window.onload = function(){
   applyLanguage();
   updateAuthUI();
   renderSidebar();
-  if (chatSessions.length === 0) {
-    startNewChat();
-  } else {
+  if (chatSessions.length === 0) startNewChat();
+  else {
     if (!activeChatId) activeChatId = chatSessions[0].id;
     loadChatSession(activeChatId);
   }
@@ -382,11 +370,8 @@ function loadChatSession(id){
     return;
   }
   currentChat.messages.forEach(msg=>{
-    if (msg.type === "video") {
-      renderVideoCardUI(msg.prompt, msg.video_url, msg.download_url);
-    } else {
-      renderMessageUI(msg.role, msg.text);
-    }
+    if (msg.type === "video") renderVideoCardUI(msg.prompt, msg.video_url, msg.download_url);
+    else renderMessageUI(msg.role, msg.text);
   });
   scrollToBottom();
 }
@@ -408,13 +393,10 @@ function startRename(id, event){
   input.className = "rename-input";
   input.value = chat.title;
   titleSpan.replaceWith(input);
-  input.focus();
-  input.select();
+  input.focus(); input.select();
   function commit(){
     const val = input.value.trim() || chat.title;
-    chat.title = val;
-    saveState();
-    renderSidebar();
+    chat.title = val; saveState(); renderSidebar();
   }
   input.addEventListener("blur", commit);
   input.addEventListener("keydown", e=>{
@@ -486,8 +468,30 @@ function renderMessageUI(role, text){
   container.appendChild(row);
 }
 
+// ===================== Video Modal Functions (+ Button) =====================
+function openVideoModal(){
+  document.getElementById("videoModal").classList.add("active");
+  document.getElementById("videoModalPrompt").focus();
+}
+function closeVideoModal(){
+  document.getElementById("videoModal").classList.remove("active");
+  document.getElementById("videoModalPrompt").value = "";
+}
+function submitVideoModal(){
+  const prompt = document.getElementById("videoModalPrompt").value.trim();
+  if (!prompt) return;
+  closeVideoModal();
+  const currentChat = chatSessions.find(c=>c.id===activeChatId);
+  if (currentChat) {
+    currentChat.messages.push({role:"user", text:`🎬 Generate Video: ${prompt}`});
+    renderMessageUI("user", `🎬 Generate Video: ${prompt}`);
+    saveState();
+  }
+  handleVideoGeneration(prompt);
+}
+
 // =========================================================================
-// 🎬 60-SECOND EXACT PROGRESS BAR & VIDEO GENERATOR ENGINE
+// 🎬 60-SECOND EXACT PROGRESS BAR & AUTO AI FOLLOW-UP COMMENT
 // =========================================================================
 async function handleVideoGeneration(videoPrompt) {
   const currentChat = chatSessions.find(c=>c.id===activeChatId);
@@ -508,7 +512,7 @@ async function handleVideoGeneration(videoPrompt) {
         
         <div class="progress-box" id="pbox_${cardId}">
           <div class="progress-label-row">
-            <span id="pstatus_${cardId}">🚀 Generating neural frames...</span>
+            <span id="pstatus_${cardId}">⚡ Initializing AI Neural Engine...</span>
             <span id="ppct_${cardId}" style="font-weight:bold;color:#38bdf8;">0%</span>
           </div>
           <div class="progress-bar-bg">
@@ -524,23 +528,29 @@ async function handleVideoGeneration(videoPrompt) {
   scrollToBottom();
 
   let fetchedVideoData = null;
-  let fetchFailed = false;
 
-  // Background Fetch Video from API
-  fetch(`${VIRU_VIDEO_API_URL}?prompt=${encodeURIComponent(videoPrompt)}`)
+  // Background Fetch: Calls /api/video (with fallback to direct Vercel API)
+  fetch(`${VIDEO_API_URL}?prompt=${encodeURIComponent(videoPrompt)}`)
     .then(res => res.json())
     .then(data => {
       if (data.status && data.video_url) {
         fetchedVideoData = data;
       } else {
-        fetchFailed = true;
+        // Fallback directly to Vercel
+        return fetch(`https://video-genarator-api.vercel.app/api/generate?prompt=${encodeURIComponent(videoPrompt)}`);
+      }
+    })
+    .then(res => res ? res.json() : null)
+    .then(data => {
+      if (data && data.status && data.video_url) {
+        fetchedVideoData = data;
       }
     })
     .catch(err => {
-      fetchFailed = true;
+      console.log("Video generation background poll error", err);
     });
 
-  // 60-Second Exact Timer (60000 ms)
+  // 60-Second Exact Timer (60000ms)
   const TOTAL_DURATION = 60000;
   const startTime = Date.now();
 
@@ -566,7 +576,6 @@ async function handleVideoGeneration(videoPrompt) {
       if (pstatus) pstatus.innerText = "✨ Finalizing High-Res Output...";
     }
 
-    // When 60 seconds is reached
     if (elapsed >= TOTAL_DURATION) {
       clearInterval(progressInterval);
       if (ppct) ppct.innerText = "100%";
@@ -577,7 +586,6 @@ async function handleVideoGeneration(videoPrompt) {
       setTimeout(() => {
         const pbox = document.getElementById(`pbox_${cardId}`);
         const pcontent = document.getElementById(`pcontent_${cardId}`);
-
         if (pbox) pbox.style.display = "none";
 
         if (fetchedVideoData && fetchedVideoData.video_url) {
@@ -585,7 +593,7 @@ async function handleVideoGeneration(videoPrompt) {
             <div class="video-player-box">
               <video src="${fetchedVideoData.video_url}" controls autoplay loop playsinline></video>
             </div>
-            <a href="${fetchedVideoData.download_url}" target="_blank" class="download-video-btn">
+            <a href="${fetchedVideoData.download_url || fetchedVideoData.video_url}" target="_blank" class="download-video-btn">
               <span class="material-icons-outlined" style="font-size:18px;">download</span> Download MP4 (9:16)
             </a>`;
           
@@ -594,12 +602,24 @@ async function handleVideoGeneration(videoPrompt) {
               type: "video",
               prompt: videoPrompt,
               video_url: fetchedVideoData.video_url,
-              download_url: fetchedVideoData.download_url
+              download_url: fetchedVideoData.download_url || fetchedVideoData.video_url
             });
             saveState();
           }
+
+          // Auto AI Follow-up Comment right after video completion
+          setTimeout(() => {
+            const feedbackText = STRINGS[currentLang].videoFeedback;
+            if (currentChat) {
+              currentChat.messages.push({ role: "model", text: feedbackText });
+              renderMessageUI("model", feedbackText);
+              saveState();
+              scrollToBottom();
+            }
+          }, 600);
+
         } else {
-          pcontent.innerHTML = `<div style="color:#ef4444;font-size:13px;padding:10px 0;">⚠️ Video generation failed. Please check prompt and try again.</div>`;
+          pcontent.innerHTML = `<div style="color:#ef4444;font-size:13px;padding:10px 0;">⚠️ Video generation failed. Please try again with a descriptive prompt.</div>`;
         }
         scrollToBottom();
       }, 500);
@@ -649,7 +669,7 @@ async function sendMessage(){
   inputField.value = "";
   saveState(); scrollToBottom();
 
-  // Check if user is asking for video generation
+  // Check if user is asking for video generation directly
   const lowerPrompt = prompt.toLowerCase();
   let videoPrompt = null;
 
@@ -661,15 +681,12 @@ async function sendMessage(){
     videoPrompt = prompt.replace(/^(generate video|make video|create video)\s*/i, "").trim();
   }
 
-  // If it is a video command, trigger 60s video generator directly
   if (videoPrompt && videoPrompt.length > 2) {
     handleVideoGeneration(videoPrompt);
     return;
   }
 
-  // ==========================================
-  // RATE LIMITING (Guest Users Only)
-  // ==========================================
+  // Rate limiting for guest users
   if (!isOwnerLoggedIn) {
     const now = new Date();
     const currentMin = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes();
@@ -736,7 +753,7 @@ async function sendMessage(){
   }
 }
 
-// ===================== Admin Login (Secure Backend Verified) =====================
+// ===================== Admin Authentication =====================
 function openLoginModal(){ document.getElementById("loginModal").classList.add("active"); document.getElementById("usernameInput").focus(); }
 function closeLoginModal(){ document.getElementById("loginModal").classList.remove("active"); }
 
