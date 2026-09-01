@@ -2,19 +2,17 @@
 <html lang="si">
 <head>
 <meta charset="UTF-8">
-<!-- Mobile responsive meta tag (prevents zooming issues on mobile) -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>VIRU AI</title>
+<title>VIRU AI - Powered by Viruna Randinu</title>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Sans+Sinhala:wght@400;500;700&family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 <style>
 :root{
   --bg:#0e0f10; --bg-elev:#17181a; --bg-elev2:#1f2123; --border:#2a2d30;
   --accent1:#5b8cff; --accent2:#e9678f; --accent3:#a786ff;
-  --text:#e8e9ea; --text-dim:#9a9ea3; --gold:#f2b01f;
+  --text:#e8e9ea; --text-dim:#9a9ea3; --gold:#f2b01f; --green:#10b981;
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Google Sans','Noto Sans Sinhala','Noto Sans Tamil',sans-serif;-webkit-tap-highlight-color:transparent;}
-/* Changed height to 100dvh to fix mobile viewport issues */
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Google Sans','Noto Sans Sinhala','Noto Sans Tamil',sans-serif;-webkit-tap-highlight-color:transparent;user-select:none;}
 body{background:var(--bg);color:var(--text);display:flex;height:100dvh;overflow:hidden;}
 .app-container{display:flex;width:100%;height:100dvh;position:relative;}
 
@@ -42,7 +40,6 @@ aside{width:280px;background:var(--bg-elev);display:flex;flex-direction:column;p
 .sidebar-link:hover{background:var(--bg-elev2);color:var(--text);}
 
 /* Main Content */
-/* Changed height to 100dvh */
 main{flex:1;display:flex;flex-direction:column;height:100dvh;background:var(--bg);position:relative;transition:all 0.3s ease;overflow:hidden;}
 header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);height:65px;flex-shrink:0;}
 .brand{font-size:20px;font-weight:500;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
@@ -61,11 +58,24 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 .avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
 .user-avatar{background:var(--bg-elev2);color:#fff;font-weight:500;font-size:14px;}
 .ai-avatar{background:linear-gradient(135deg,var(--accent1),var(--accent2),var(--accent3));color:#fff;}
-.message-content{flex:1;font-size:15.5px;line-height:1.65;}
+.message-content{flex:1;font-size:15.5px;line-height:1.65;user-select:text;}
 .message-text-block{white-space:pre-wrap;margin-bottom:8px;}
 
+/* Video Generation Card & Progress Bar */
+.video-card{background:var(--bg-elev);border:1px solid var(--border);border-radius:16px;padding:20px;max-width:380px;margin-top:10px;box-shadow:0 8px 24px rgba(0,0,0,0.4);}
+.video-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:13px;color:var(--text-dim);}
+.video-card-title{font-weight:bold;color:#38bdf8;display:flex;align-items:center;gap:6px;}
+.progress-box{background:#0e0f10;border-radius:10px;padding:14px;border:1px solid var(--border);margin-bottom:10px;}
+.progress-label-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;color:var(--text-dim);}
+.progress-bar-bg{width:100%;height:8px;background:#1e293b;border-radius:4px;overflow:hidden;}
+.progress-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent1),var(--accent2));border-radius:4px;transition:width 0.1s linear;}
+.video-player-box{border-radius:12px;overflow:hidden;background:#000;position:relative;margin-top:12px;}
+.video-player-box video{width:100%;max-height:450px;display:block;border-radius:12px;}
+.download-video-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--green);color:#fff;text-decoration:none;padding:12px;border-radius:10px;font-weight:bold;font-size:14px;margin-top:12px;transition:0.2s;text-align:center;}
+.download-video-btn:hover{filter:brightness(1.1);}
+
 /* Code Blocks */
-.code-container{background:#0a0a0b;border-radius:10px;border:1px solid var(--border);margin:14px 0;overflow:hidden;}
+.code-container{background:#0a0a0b;border-radius:10px;border:1px solid var(--border);margin:14px 0;overflow:hidden;user-select:text;}
 .code-header{background:var(--bg-elev2);padding:8px 14px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text-dim);border-bottom:1px solid var(--border);font-family:monospace;text-transform:uppercase;}
 .copy-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:4px;}
 .copy-btn:hover{background:#2a2d30;color:#fff;}
@@ -74,10 +84,9 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 .inline-code{background:#252729;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:13.5px;color:var(--gold);}
 
 /* Input Footer */
-/* Added safe-area-inset to prevent navigation bar overlapping */
 .footer-container{padding:15px 15% calc(20px + env(safe-area-inset-bottom));flex-shrink:0;}
 .input-wrapper{max-width:850px;margin:0 auto;display:flex;align-items:center;background:var(--bg-elev);border:1px solid var(--border);border-radius:28px;padding:8px 8px 8px 18px;}
-#userInput{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15.5px;padding:8px;}
+#userInput{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15.5px;padding:8px;user-select:text;}
 #userInput::placeholder{color:var(--text-dim);}
 .send-btn{background:linear-gradient(135deg,var(--accent1),var(--accent3));border:none;color:#fff;cursor:pointer;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
 .send-btn:hover{filter:brightness(1.1);}
@@ -106,11 +115,9 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 .lang-pill{border:1px solid var(--border);background:#0e0f10;color:var(--text);padding:10px;border-radius:10px;cursor:pointer;text-align:center;font-size:13.5px;}
 .lang-pill.active{border-color:var(--accent1);background:rgba(91,140,255,.12);color:#fff;}
 
-/* Mobile overlay for sidebar dimming */
 .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:90;opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
 .sidebar-overlay.active{opacity:1;pointer-events:auto;}
 
-/* Mobile Responsive */
 @media (max-width:768px){
   aside{position:fixed;left:0;top:0;transform:translateX(-100%);}
   aside.open{transform:translateX(0);}
@@ -150,7 +157,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 
     <div class="footer-container">
       <div class="input-wrapper">
-        <input type="text" id="userInput" placeholder="Ask VIRU AI..." onkeypress="checkEnter(event)">
+        <input type="text" id="userInput" placeholder="Ask VIRU AI or type /video <prompt>..." onkeypress="checkEnter(event)">
         <button class="send-btn" onclick="sendMessage()"><span class="material-icons-outlined">send</span></button>
       </div>
     </div>
@@ -192,32 +199,59 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 </div>
 
 <script>
+// =========================================================================
+// 🔒 ADVANCED SECURITY PROTOCOL: DEVTOOLS & INSPECT PROTECTION
+// =========================================================================
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+document.addEventListener('keydown', function(e) {
+  // Block F12
+  if (e.key === "F12" || e.keyCode === 123) {
+    e.preventDefault();
+    return false;
+  }
+  // Block Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U, Ctrl+S
+  if (e.ctrlKey && (e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c') || e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's')) {
+    e.preventDefault();
+    return false;
+  }
+  // Block Meta (Mac) Cmd+Opt+I / Cmd+Opt+J / Cmd+U
+  if (e.metaKey && (e.altKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j') || e.key === 'U' || e.key === 'u')) {
+    e.preventDefault();
+    return false;
+  }
+});
+
 // ===================== i18n =====================
 const STRINGS = {
-  si: { newchat:"නව කතාබස", recent:"මෑත කතාබස්", settings:"සැකසුම්", admintitle:"අයිතිකරු සත්‍යාපනය", adminsub:"සීමිත ප්‍රවේශය", loginbtn:"ඇතුල් වන්න", cancel:"අවලංගු කරන්න",
+  si: { newchat:"නව කතාබස", recent:"මෑත කතාබස්", settings:"සැකසුම්", admintitle:"අයිතිකරු සත්යාපනය", adminsub:"සීමිත ප්රවේශය", loginbtn:"ඇතුල් වන්න", cancel:"අවලංගු කරන්න",
     settingstitle:"සැකසුම්", langlabel:"භාෂාව", displayname:"නම පෙන්වන ආකාරය", savebtn:"සුරකින්න", close:"වසන්න",
-    welcome:"ආයුබෝවන්! මම VIRU AI. මම නිර්මාණය කළේ Viruna Randinu විසිනි. අද මම ඔබට උදව් කරන්නේ කෙසේද? ✨",
-    placeholder:"VIRU AI ගෙන් අහන්න...", ownerMode:"අයිතිකරු මාදිලිය සක්‍රියයි", logout:"ඉවත් වන්න", wrongCreds:"වැරදි දත්ත! ඔබ සත්‍ය අයිතිකරු නොවේ නම් කරුණාකර ඉවත් වන්න.",
+    welcome:"ආයුබෝවන්! මම VIRU AI. මම නිර්මාණය කළේ Viruna Randinu විසිනි. අද මම ඔබට උදව් කරන්නේ කෙසේද? ✨\n\n*(වීඩියෝවක් සෑදීමට 'video ekak hadapan <prompt>' හෝ '/video <prompt>' ලෙස Type කරන්න)* 🎬",
+    placeholder:"VIRU AI ගෙන් අහන්න...", ownerMode:"අයිතිකරු මාදිලිය සක්රියයි", logout:"ඉවත් වන්න", wrongCreds:"වැරදි දත්ත! ඔබ සත්ය අයිතිකරු නොවේ නම් කරුණාකර ඉවත් වන්න.",
     networkErr:"⚠️ ජාල දෝෂයකි. සම්බන්ධතාවය නැතිවිය.", errOccurred:"⚠️ දෝෂයක් ඇතිවිය:",
-    limitMsg:"අම්මෝ මචං, ඔයාගේ පණිවිඩ සීමාව පැනලා තියෙන්නේ! 🚫 (විනාඩියකට 8යි / දවසකට 80යි). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑" },
+    limitMsg:"අම්මෝ මචං, ඔයාගේ පණිවිඩ සීමාව පැනලා තියෙන්නේ! 🚫 (විනාඩියකට 8යි / දවසකට 80යි). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑",
+    videoGenTitle:"VIRU AI Video Generator (9:16)", videoRendering:"වීඩියෝව නිර්මාණය වෙමින් පවතී...", videoComplete:"වීඩියෝව සාර්ථකව නිර්මාණය විය! 🎉" },
   en: { newchat:"New chat", recent:"Recent Chats", settings:"Settings", admintitle:"Owner Authentication", adminsub:"Restricted access", loginbtn:"Login", cancel:"Cancel",
     settingstitle:"Settings", langlabel:"Language", displayname:"Display name", savebtn:"Save", close:"Close",
-    welcome:"Hello! I'm VIRU AI, created by Viruna Randinu. How can I help you today? ✨",
+    welcome:"Hello! I'm VIRU AI, created by Viruna Randinu. How can I help you today? ✨\n\n*(To generate a video, type 'make a video <prompt>' or '/video <prompt>')* 🎬",
     placeholder:"Ask VIRU AI...", ownerMode:"Owner Mode Active", logout:"Logout", wrongCreds:"Incorrect credentials! Please leave if you are not the real owner.",
     networkErr:"⚠️ Network error. Connection lost.", errOccurred:"⚠️ Error occurred:",
-    limitMsg:"Whoa there! You've hit your message limit! 🚫 (Max 8 per min / 80 per day). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑" },
+    limitMsg:"Whoa there! You've hit your message limit! 🚫 (Max 8 per min / 80 per day). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑",
+    videoGenTitle:"VIRU AI Video Generator (9:16)", videoRendering:"Rendering neural video...", videoComplete:"Video successfully rendered! 🎉" },
   ta: { newchat:"புதிய அரட்டை", recent:"சமீபத்திய அரட்டைகள்", settings:"அமைப்புகள்", admintitle:"உரிமையாளர் அங்கீகாரம்", adminsub:"கட்டுப்படுத்தப்பட்ட அணுகல்", loginbtn:"உள்நுழைய", cancel:"ரத்து செய்",
     settingstitle:"அமைப்புகள்", langlabel:"மொழி", displayname:"காட்சி பெயர்", savebtn:"சேமி", close:"மூடு",
     welcome:"வணக்கம்! நான் VIRU AI, Viruna Randinu என்பவரால் உருவாக்கப்பட்டேன். இன்று உங்களுக்கு எப்படி உதவ முடியும்? ✨",
     placeholder:"VIRU AI யிடம் கேளுங்கள்...", ownerMode:"உரிமையாளர் முறை செயலில்", logout:"வெளியேறு", wrongCreds:"தவறான தகவல்கள்! நீங்கள் உண்மையான உரிமையாளர் இல்லை என்றால் வெளியேறவும்.",
     networkErr:"⚠️ பிணைய பிழை. இணைப்பு துண்டிக்கப்பட்டது.", errOccurred:"⚠️ பிழை ஏற்பட்டது:",
-    limitMsg:"உங்கள் செய்தி வரம்பு முடிந்துவிட்டது! 🚫 (நிமிடத்திற்கு 8 / நாளுக்கு 80). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑" },
+    limitMsg:"உங்கள் செய்தி வரம்பு முடிந்துவிட்டது! 🚫 (நிமிடத்திற்கு 8 / நாளுக்கு 80). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑",
+    videoGenTitle:"VIRU AI Video Generator (9:16)", videoRendering:"வீடியோ உருவாக்கப்படுகிறது...", videoComplete:"வீடியோ தயாராக உள்ளது! 🎉" },
   sg: { newchat:"New chat", recent:"Recent Chats", settings:"Settings", admintitle:"Owner Login", adminsub:"Restricted access", loginbtn:"Login", cancel:"Cancel",
     settingstitle:"Settings", langlabel:"Language", displayname:"Display name", savebtn:"Save", close:"Close",
-    welcome:"Ayubowan! Mama VIRU AI. Mawa haduwe Viruna Randinu. Ada mama oyata kohomada help karanne? ✨",
+    welcome:"Ayubowan! Mama VIRU AI. Mawa haduwe Viruna Randinu. Ada mama oyata kohomada help karanne? ✨\n\n*(Video ekak hadanna 'video ekak hadapan <prompt>' or '/video <prompt>' kiyala gahanna)* 🎬",
     placeholder:"VIRU AI gen ahanna...", ownerMode:"Owner Mode Active", logout:"Logout", wrongCreds:"Wrong details! If oya owner nemei nam please ivath wenna.",
     networkErr:"⚠️ Network error wuna. Connection nathiwuna.", errOccurred:"⚠️ Error ekak una:",
-    limitMsg:"Ammo macho, oyage message limit eka panala! 🚫 (Vinadiyakata 8i / Dawasakata 80i). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑" }
+    limitMsg:"Ammo macho, oyage message limit eka panala! 🚫 (Vinadiyakata 8i / Dawasakata 80i). 😅\n\n**Update PRO plan to continue VIRU AI 😎🔥**\nContact: Viruna Randinu 👑",
+    videoGenTitle:"VIRU AI Video Generator (9:16)", videoRendering:"Video eka generate wenawa macho...", videoComplete:"Menna video eka ready macho! 🎉" }
 };
 let currentLang = localStorage.getItem("viru_lang") || "en";
 
@@ -245,14 +279,17 @@ function setLanguage(lang){
   applyLanguage();
 }
 
-// ===================== State =====================
-const CLOUDFLARE_API_URL = "/api/chat";
+// ===================== State & Endpoints =====================
+const CLOUDFLARE_CHAT_URL = "/api/chat";
+const CLOUDFLARE_AUTH_URL = "/api/auth";
+const VIRU_VIDEO_API_URL = "https://video-genarator-api.vercel.app/api/generate";
+
 let chatSessions = JSON.parse(localStorage.getItem("viru_chat_sessions")) || [];
 let activeChatId = localStorage.getItem("viru_active_chat_id") || null;
 let isOwnerLoggedIn = JSON.parse(localStorage.getItem("viru_is_owner")) || false;
+let authToken = localStorage.getItem("viru_auth_token") || "";
 let displayName = localStorage.getItem("viru_display_name") || "Viruna";
 
-// ===================== Mobile UI & Admin Tap/Key Logic =====================
 function toggleSidebar(){
   const sidebar = document.getElementById("sidebar");
   const overlay = document.getElementById("sidebarOverlay");
@@ -292,18 +329,16 @@ document.addEventListener("keydown", function(e){
   }
 });
 
-// 5 Taps for Mobile Admin Panel
+// 5 Taps on Mobile Logo
 let logoTapCount = 0;
 let logoTapTimer;
 function handleLogoTap() {
   logoTapCount++;
   clearTimeout(logoTapTimer);
-  // Changed to 5 taps
   if (logoTapCount >= 5) {
     openLoginModal();
     logoTapCount = 0;
   } else {
-    // Increased timeout to 2000ms to give enough time to tap 5 times
     logoTapTimer = setTimeout(() => { logoTapCount = 0; }, 2000);
   }
 }
@@ -321,7 +356,7 @@ window.onload = function(){
 };
 
 function startNewChat(){
-  closeSidebar(); // auto close on mobile
+  closeSidebar();
   const newSession = { id:"chat_"+Date.now(), title:"New Chat", messages:[] };
   chatSessions.unshift(newSession);
   activeChatId = newSession.id;
@@ -329,7 +364,7 @@ function startNewChat(){
 }
 
 function loadChatSession(id){
-  closeSidebar(); // auto close on mobile
+  closeSidebar();
   activeChatId = id;
   localStorage.setItem("viru_active_chat_id", id);
   document.querySelectorAll('.history-item').forEach(item=>{
@@ -342,11 +377,17 @@ function loadChatSession(id){
     container.innerHTML = `
       <div class="chat-row ai-row">
         <div class="avatar ai-avatar"><span class="material-icons-outlined" style="font-size:20px;">auto_awesome</span></div>
-        <div class="message-content"><div class="message-text-block">${STRINGS[currentLang].welcome}</div></div>
+        <div class="message-content"><div class="message-text-block">${parseMarkdown(STRINGS[currentLang].welcome)}</div></div>
       </div>`;
     return;
   }
-  currentChat.messages.forEach(msg=>renderMessageUI(msg.role, msg.text));
+  currentChat.messages.forEach(msg=>{
+    if (msg.type === "video") {
+      renderVideoCardUI(msg.prompt, msg.video_url, msg.download_url);
+    } else {
+      renderMessageUI(msg.role, msg.text);
+    }
+  });
   scrollToBottom();
 }
 
@@ -445,6 +486,152 @@ function renderMessageUI(role, text){
   container.appendChild(row);
 }
 
+// =========================================================================
+// 🎬 60-SECOND EXACT PROGRESS BAR & VIDEO GENERATOR ENGINE
+// =========================================================================
+async function handleVideoGeneration(videoPrompt) {
+  const currentChat = chatSessions.find(c=>c.id===activeChatId);
+  const container = document.getElementById("chatContainer");
+  const cardId = "video_card_" + Date.now();
+
+  const videoRow = document.createElement("div");
+  videoRow.className = "chat-row ai-row";
+  videoRow.innerHTML = `
+    <div class="avatar ai-avatar"><span class="material-icons-outlined" style="font-size:20px;">movie</span></div>
+    <div class="message-content">
+      <div class="video-card" id="${cardId}">
+        <div class="video-card-header">
+          <div class="video-card-title"><span class="material-icons-outlined" style="font-size:17px;">auto_awesome</span> VIRU AI Video Generator</div>
+          <span style="font-size:11px;background:#1e293b;padding:2px 8px;border-radius:6px;">9:16</span>
+        </div>
+        <div style="font-size:13px;margin-bottom:12px;color:var(--text);font-style:italic;">"${videoPrompt}"</div>
+        
+        <div class="progress-box" id="pbox_${cardId}">
+          <div class="progress-label-row">
+            <span id="pstatus_${cardId}">🚀 Generating neural frames...</span>
+            <span id="ppct_${cardId}" style="font-weight:bold;color:#38bdf8;">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="pfill_${cardId}"></div>
+          </div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:6px;text-align:right;" id="ptime_${cardId}">60s remaining</div>
+        </div>
+
+        <div id="pcontent_${cardId}"></div>
+      </div>
+    </div>`;
+  container.appendChild(videoRow);
+  scrollToBottom();
+
+  let fetchedVideoData = null;
+  let fetchFailed = false;
+
+  // Background Fetch Video from API
+  fetch(`${VIRU_VIDEO_API_URL}?prompt=${encodeURIComponent(videoPrompt)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.status && data.video_url) {
+        fetchedVideoData = data;
+      } else {
+        fetchFailed = true;
+      }
+    })
+    .catch(err => {
+      fetchFailed = true;
+    });
+
+  // 60-Second Exact Timer (60000 ms)
+  const TOTAL_DURATION = 60000;
+  const startTime = Date.now();
+
+  const progressInterval = setInterval(() => {
+    const elapsed = Date.now() - startTime;
+    let percentage = Math.min(100, Math.floor((elapsed / TOTAL_DURATION) * 100));
+    let remainingSec = Math.max(0, Math.ceil((TOTAL_DURATION - elapsed) / 1000));
+
+    const pfill = document.getElementById(`pfill_${cardId}`);
+    const ppct = document.getElementById(`ppct_${cardId}`);
+    const ptime = document.getElementById(`ptime_${cardId}`);
+    const pstatus = document.getElementById(`pstatus_${cardId}`);
+
+    if (pfill) pfill.style.width = percentage + "%";
+    if (ppct) ppct.innerText = percentage + "%";
+    if (ptime) ptime.innerText = remainingSec + "s remaining";
+
+    if (percentage < 30) {
+      if (pstatus) pstatus.innerText = "⚡ Initializing AI Neural Engine...";
+    } else if (percentage < 70) {
+      if (pstatus) pstatus.innerText = "🎬 Rendering 9:16 Video Frames...";
+    } else if (percentage < 99) {
+      if (pstatus) pstatus.innerText = "✨ Finalizing High-Res Output...";
+    }
+
+    // When 60 seconds is reached
+    if (elapsed >= TOTAL_DURATION) {
+      clearInterval(progressInterval);
+      if (ppct) ppct.innerText = "100%";
+      if (pfill) pfill.style.width = "100%";
+      if (ptime) ptime.innerText = "Completed!";
+      if (pstatus) pstatus.innerText = "🎉 Video Ready!";
+
+      setTimeout(() => {
+        const pbox = document.getElementById(`pbox_${cardId}`);
+        const pcontent = document.getElementById(`pcontent_${cardId}`);
+
+        if (pbox) pbox.style.display = "none";
+
+        if (fetchedVideoData && fetchedVideoData.video_url) {
+          pcontent.innerHTML = `
+            <div class="video-player-box">
+              <video src="${fetchedVideoData.video_url}" controls autoplay loop playsinline></video>
+            </div>
+            <a href="${fetchedVideoData.download_url}" target="_blank" class="download-video-btn">
+              <span class="material-icons-outlined" style="font-size:18px;">download</span> Download MP4 (9:16)
+            </a>`;
+          
+          if (currentChat) {
+            currentChat.messages.push({
+              type: "video",
+              prompt: videoPrompt,
+              video_url: fetchedVideoData.video_url,
+              download_url: fetchedVideoData.download_url
+            });
+            saveState();
+          }
+        } else {
+          pcontent.innerHTML = `<div style="color:#ef4444;font-size:13px;padding:10px 0;">⚠️ Video generation failed. Please check prompt and try again.</div>`;
+        }
+        scrollToBottom();
+      }, 500);
+    }
+  }, 100);
+}
+
+function renderVideoCardUI(prompt, videoUrl, downloadUrl) {
+  const container = document.getElementById("chatContainer");
+  const videoRow = document.createElement("div");
+  videoRow.className = "chat-row ai-row";
+  videoRow.innerHTML = `
+    <div class="avatar ai-avatar"><span class="material-icons-outlined" style="font-size:20px;">movie</span></div>
+    <div class="message-content">
+      <div class="video-card">
+        <div class="video-card-header">
+          <div class="video-card-title"><span class="material-icons-outlined" style="font-size:17px;">auto_awesome</span> VIRU AI Video Generator</div>
+          <span style="font-size:11px;background:#1e293b;padding:2px 8px;border-radius:6px;">9:16</span>
+        </div>
+        <div style="font-size:13px;margin-bottom:12px;color:var(--text);font-style:italic;">"${prompt}"</div>
+        <div class="video-player-box">
+          <video src="${videoUrl}" controls loop playsinline></video>
+        </div>
+        <a href="${downloadUrl}" target="_blank" class="download-video-btn">
+          <span class="material-icons-outlined" style="font-size:18px;">download</span> Download MP4 (9:16)
+        </a>
+      </div>
+    </div>`;
+  container.appendChild(videoRow);
+}
+
+// ===================== Send Message Router =====================
 async function sendMessage(){
   const inputField = document.getElementById("userInput");
   const prompt = inputField.value.trim();
@@ -457,18 +644,34 @@ async function sendMessage(){
     renderSidebar();
   }
   
-  // Render User Message First
   currentChat.messages.push({role:"user", text:prompt});
   renderMessageUI("user", prompt);
   inputField.value = "";
   saveState(); scrollToBottom();
 
+  // Check if user is asking for video generation
+  const lowerPrompt = prompt.toLowerCase();
+  let videoPrompt = null;
+
+  if (lowerPrompt.startsWith("/video ")) {
+    videoPrompt = prompt.substring(7).trim();
+  } else if (lowerPrompt.startsWith("video ekak hadapan ") || lowerPrompt.startsWith("video ekak oni ") || lowerPrompt.startsWith("video ekak ona ")) {
+    videoPrompt = prompt.replace(/^(video ekak hadapan|video ekak oni|video ekak ona)\s*/i, "").trim();
+  } else if (lowerPrompt.startsWith("generate video ") || lowerPrompt.startsWith("make video ") || lowerPrompt.startsWith("create video ")) {
+    videoPrompt = prompt.replace(/^(generate video|make video|create video)\s*/i, "").trim();
+  }
+
+  // If it is a video command, trigger 60s video generator directly
+  if (videoPrompt && videoPrompt.length > 2) {
+    handleVideoGeneration(videoPrompt);
+    return;
+  }
+
   // ==========================================
-  // STRICT RATE LIMITING LOGIC (Free Users Only)
+  // RATE LIMITING (Guest Users Only)
   // ==========================================
   if (!isOwnerLoggedIn) {
     const now = new Date();
-    // Unique string for current minute and current day
     const currentMin = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes();
     const currentDay = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
 
@@ -477,34 +680,22 @@ async function sendMessage(){
     let countMin = parseInt(localStorage.getItem("viru_msg_count_min") || "0");
     let countDay = parseInt(localStorage.getItem("viru_msg_count_day") || "0");
 
-    // Reset minute counter if a new minute started
-    if (savedMin !== currentMin) {
-      countMin = 0;
-      localStorage.setItem("viru_min_timestamp", currentMin);
-    }
-    
-    // Reset daily counter if a new day started
-    if (savedDay !== currentDay) {
-      countDay = 0;
-      localStorage.setItem("viru_day_timestamp", currentDay);
-    }
+    if (savedMin !== currentMin) { countMin = 0; localStorage.setItem("viru_min_timestamp", currentMin); }
+    if (savedDay !== currentDay) { countDay = 0; localStorage.setItem("viru_day_timestamp", currentDay); }
 
-    // Check Limits (Max 8 per min, Max 80 per day)
     if (countMin >= 8 || countDay >= 80) {
       const limitMessage = STRINGS[currentLang].limitMsg;
       currentChat.messages.push({role: "model", text: limitMessage});
       renderMessageUI("model", limitMessage);
-      saveState(); 
-      scrollToBottom();
-      return; // Stop execution, do not call API
+      saveState(); scrollToBottom();
+      return;
     }
 
-    // If limits not exceeded, increment counters and save
     localStorage.setItem("viru_msg_count_min", countMin + 1);
     localStorage.setItem("viru_msg_count_day", countDay + 1);
   }
-  // ==========================================
 
+  // AI Loading Animation
   const container = document.getElementById("chatContainer");
   const loadingRow = document.createElement("div");
   loadingRow.className = "chat-row ai-row";
@@ -514,19 +705,22 @@ async function sendMessage(){
   container.appendChild(loadingRow);
   scrollToBottom();
 
-  const historyPayload = currentChat.messages.map(msg=>({
-    role: msg.role==="user" ? "user" : "model",
-    parts: [{text: msg.text}]
-  }));
+  const historyPayload = currentChat.messages
+    .filter(m => m.type !== "video")
+    .map(msg=>({ role: msg.role==="user" ? "user" : "model", parts: [{text: msg.text}] }));
 
   try {
-    const response = await fetch(CLOUDFLARE_API_URL, {
+    const response = await fetch(CLOUDFLARE_CHAT_URL, {
       method:"POST",
-      headers:{"Content-Type":"application/json"},
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization": authToken ? `Bearer ${authToken}` : ""
+      },
       body: JSON.stringify({ historyPayload, isOwnerLoggedIn, lang: currentLang })
     });
     const data = await response.json();
     loadingRow.remove();
+
     if (data.reply){
       currentChat.messages.push({role:"model", text:data.reply});
       renderMessageUI("model", data.reply);
@@ -542,32 +736,58 @@ async function sendMessage(){
   }
 }
 
-// ===================== Admin login =====================
+// ===================== Admin Login (Secure Backend Verified) =====================
 function openLoginModal(){ document.getElementById("loginModal").classList.add("active"); document.getElementById("usernameInput").focus(); }
 function closeLoginModal(){ document.getElementById("loginModal").classList.remove("active"); }
 
-function handleLogin(){
+async function handleLogin(){
   const user = document.getElementById("usernameInput").value.trim();
   const pass = document.getElementById("passwordInput").value.trim();
-  // Owner Login Details updated to Viruna Randinu
-  if (user === "viruna" && pass === "2010"){
-    isOwnerLoggedIn = true;
-    displayName = user;
-    localStorage.setItem("viru_is_owner", true);
-    localStorage.setItem("viru_display_name", displayName);
-    closeLoginModal();
-    updateAuthUI();
-    document.getElementById("usernameInput").value = "";
-    document.getElementById("passwordInput").value = "";
-    loadChatSession(activeChatId);
-  } else {
-    alert(STRINGS[currentLang].wrongCreds);
+  const btn = document.getElementById("t-loginbtn");
+
+  if (!user || !pass) return;
+
+  btn.innerText = "Authenticating...";
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(CLOUDFLARE_AUTH_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: user, password: pass })
+    });
+    const result = await res.json();
+
+    if (result.success && result.token) {
+      isOwnerLoggedIn = true;
+      displayName = result.displayName || "Viruna";
+      authToken = result.token;
+
+      localStorage.setItem("viru_is_owner", true);
+      localStorage.setItem("viru_auth_token", authToken);
+      localStorage.setItem("viru_display_name", displayName);
+
+      closeLoginModal();
+      updateAuthUI();
+      document.getElementById("usernameInput").value = "";
+      document.getElementById("passwordInput").value = "";
+      loadChatSession(activeChatId);
+    } else {
+      alert(STRINGS[currentLang].wrongCreds);
+    }
+  } catch (err) {
+    alert("Authentication failed: Network Error");
+  } finally {
+    btn.innerText = STRINGS[currentLang].loginbtn;
+    btn.disabled = false;
   }
 }
 
 function handleLogout(){
   isOwnerLoggedIn = false;
+  authToken = "";
   localStorage.setItem("viru_is_owner", false);
+  localStorage.removeItem("viru_auth_token");
   updateAuthUI();
   loadChatSession(activeChatId);
 }
@@ -585,9 +805,8 @@ function updateAuthUI(){
   }
 }
 
-// ===================== Settings modal =====================
 function openSettingsModal(){
-  closeSidebar(); // close sidebar when opening settings on mobile
+  closeSidebar();
   document.getElementById("settingsModal").classList.add("active");
   document.getElementById("ownerSettingsRow").style.display = isOwnerLoggedIn ? "flex" : "none";
   document.getElementById("displayNameInput").value = displayName;
