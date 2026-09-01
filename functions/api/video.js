@@ -1,6 +1,6 @@
 /**
  * ====================================================
- *  VIRU AI - Server-Side Video Pipeline (Zero CORS)
+ *  VIRU AI - Real-time Video Stream Router
  *  Creator: Viruna Randinu | Brand: VIRU AI
  * ====================================================
  */
@@ -25,9 +25,11 @@ export async function onRequestGet(context) {
   const API_KEY = env.ANABOT_API_KEY || "freeApikey";
 
   try {
-    // Cloudflare Server එකෙන්ම කෙලින්ම Video එක ලබා ගැනීම
     const targetUrl = `https://anabot.my.id/api/ai/text2video?prompt=${encodeURIComponent(prompt.trim())}&apikey=${encodeURIComponent(API_KEY)}`;
-    const response = await fetch(targetUrl);
+    
+    const response = await fetch(targetUrl, {
+      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" }
+    });
     const data = await response.json();
 
     if (data && data.success && data.data && data.data.result) {
@@ -46,18 +48,16 @@ export async function onRequestGet(context) {
         creator: "Viruna Randinu",
         owner: "VIRU AI",
         status: false,
-        error: "Upstream engine returned error",
+        error: (data && data.message) || "Upstream AI failed to render video",
         raw: data
       }), { headers, status: 502 });
     }
-
   } catch (error) {
     return new Response(JSON.stringify({
       creator: "Viruna Randinu",
       owner: "VIRU AI",
       status: false,
-      error: "Server-side video fetch error",
-      details: error.message
+      error: "Connection Error: " + error.message
     }), { headers, status: 500 });
   }
 }
