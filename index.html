@@ -12,8 +12,8 @@
   --accent1:#5b8cff; --accent2:#e9678f; --accent3:#a786ff;
   --text:#e8e9ea; --text-dim:#9a9ea3; --gold:#f2b01f; --green:#10b981;
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Google Sans','Noto Sans Sinhala','Noto Sans Tamil',sans-serif;-webkit-tap-highlight-color:transparent;user-select:none;}
-body{background:var(--bg);color:var(--text);display:flex;height:100dvh;overflow:hidden;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Google Sans','Noto Sans Sinhala','Noto Sans Tamil',sans-serif;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--text);display:flex;height:100dvh;overflow:hidden;user-select:none;}
 .app-container{display:flex;width:100%;height:100dvh;position:relative;}
 
 /* Sidebar */
@@ -58,10 +58,10 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 .avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
 .user-avatar{background:var(--bg-elev2);color:#fff;font-weight:500;font-size:14px;}
 .ai-avatar{background:linear-gradient(135deg,var(--accent1),var(--accent2),var(--accent3));color:#fff;}
-.message-content{flex:1;font-size:15.5px;line-height:1.65;user-select:text;}
+.message-content{flex:1;font-size:15.5px;line-height:1.65;user-select:text;-webkit-user-select:text;}
 .message-text-block{white-space:pre-wrap;margin-bottom:8px;}
 
-/* Video Card & 60s Progress Bar */
+/* Video Card & Progress Bar */
 .video-card{background:var(--bg-elev);border:1px solid var(--border);border-radius:16px;padding:20px;max-width:380px;margin-top:10px;box-shadow:0 8px 24px rgba(0,0,0,0.4);}
 .video-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:13px;color:var(--text-dim);}
 .video-card-title{font-weight:bold;color:#38bdf8;display:flex;align-items:center;gap:6px;}
@@ -75,7 +75,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 .download-video-btn:hover{filter:brightness(1.1);}
 
 /* Code Blocks */
-.code-container{background:#0a0a0b;border-radius:10px;border:1px solid var(--border);margin:14px 0;overflow:hidden;user-select:text;}
+.code-container{background:#0a0a0b;border-radius:10px;border:1px solid var(--border);margin:14px 0;overflow:hidden;user-select:text;-webkit-user-select:text;}
 .code-header{background:var(--bg-elev2);padding:8px 14px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text-dim);border-bottom:1px solid var(--border);font-family:monospace;text-transform:uppercase;}
 .copy-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:4px;}
 .copy-btn:hover{background:#2a2d30;color:#fff;}
@@ -88,7 +88,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 .input-wrapper{max-width:850px;margin:0 auto;display:flex;align-items:center;background:var(--bg-elev);border:1px solid var(--border);border-radius:28px;padding:6px 8px 6px 12px;gap:8px;}
 .plus-btn{background:var(--bg-elev2);border:none;color:#38bdf8;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.2s;flex-shrink:0;}
 .plus-btn:hover{background:#38bdf8;color:#0e0f10;}
-#userInput{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15.5px;padding:8px 4px;user-select:text;}
+#userInput{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15.5px;padding:8px 4px;user-select:text;-webkit-user-select:text;}
 #userInput::placeholder{color:var(--text-dim);}
 .send-btn{background:linear-gradient(135deg,var(--accent1),var(--accent3));border:none;color:#fff;cursor:pointer;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0;}
 .send-btn:hover{filter:brightness(1.1);}
@@ -105,7 +105,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 .modal-card{background:var(--bg-elev);padding:26px;border-radius:18px;width:90%;max-width:390px;border:1px solid var(--border);display:flex;flex-direction:column;gap:14px;}
 .modal-card h3{font-size:19px;font-weight:500;text-align:center;}
 .modal-card p.sub{font-size:12.5px;color:var(--text-dim);text-align:center;margin-top:-8px;}
-.modal-card input{background:#0e0f10;border:1px solid var(--border);border-radius:9px;padding:12px;color:#fff;font-size:14.5px;outline:none;}
+.modal-card input{background:#0e0f10;border:1px solid var(--border);border-radius:9px;padding:12px;color:#fff;font-size:14.5px;outline:none;user-select:text;-webkit-user-select:text;}
 .modal-card input:focus{border-color:var(--accent1);}
 .modal-card button.primary{background:linear-gradient(135deg,var(--accent1),var(--accent3));border:none;color:#fff;padding:12px;border-radius:9px;font-size:14.5px;font-weight:500;cursor:pointer;}
 .modal-card button.primary:hover{filter:brightness(1.1);}
@@ -159,9 +159,9 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 
     <div class="footer-container">
       <div class="input-wrapper">
-        <button class="plus-btn" onclick="handlePlusClick()" title="Generate AI Video (9:16)"><span class="material-icons-outlined">add</span></button>
-        <input type="text" id="userInput" placeholder="Ask VIRU AI or type /video <prompt>..." onkeypress="checkEnter(event)">
-        <button class="send-btn" onclick="sendMessage()"><span class="material-icons-outlined">send</span></button>
+        <button class="plus-btn" onclick="handlePlusClick()" title="Generate AI Video (9:16)" type="button"><span class="material-icons-outlined">add</span></button>
+        <input type="text" id="userInput" placeholder="Ask VIRU AI or type /video <prompt>..." onkeydown="checkEnter(event)" autocomplete="off">
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()" type="button"><span class="material-icons-outlined">send</span></button>
       </div>
     </div>
   </main>
@@ -174,7 +174,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
     <p class="sub" id="t-adminsub">Restricted access</p>
     <input type="text" id="usernameInput" placeholder="Username" autocomplete="off">
     <input type="password" id="passwordInput" placeholder="Password">
-    <button class="primary" onclick="handleLogin()" id="t-loginbtn">Login</button>
+    <button class="primary" onclick="handleLogin()" id="t-loginbtn" type="button">Login</button>
     <div class="close-modal" onclick="closeLoginModal()" id="t-cancel">Cancel</div>
   </div>
 </div>
@@ -196,14 +196,14 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
       <label id="t-displayname">Display name</label>
       <input type="text" id="displayNameInput" placeholder="Viruna" style="max-width:140px;">
     </div>
-    <button class="primary" onclick="saveSettings()" id="t-savebtn">Save</button>
+    <button class="primary" onclick="saveSettings()" id="t-savebtn" type="button">Save</button>
     <div class="close-modal" onclick="closeSettingsModal()" id="t-close">Close</div>
   </div>
 </div>
 
 <script>
 // =========================================================================
-// 🔒 DEVTOOLS & SOURCE PROTECTION
+// 🔒 DEVTOOLS PROTECTION
 // =========================================================================
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('keydown', function(e) {
@@ -298,13 +298,13 @@ function closeSidebar(){
   }
 }
 
-// Admin secret sequence
+// Secret sequence for PC
 const SECRET_SEQUENCE = "admin";
 let typedBuffer = "";
 document.addEventListener("keydown", function(e){
   const active = document.activeElement;
   if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) return;
-  if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
+  if (e.key && e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
     typedBuffer += e.key.toLowerCase();
     if (typedBuffer.length > SECRET_SEQUENCE.length) typedBuffer = typedBuffer.slice(-SECRET_SEQUENCE.length);
     if (typedBuffer === SECRET_SEQUENCE) { openLoginModal(); typedBuffer = ""; }
@@ -406,8 +406,8 @@ function renderSidebar(){
     item.innerHTML = `
       <span class="material-icons-outlined" style="font-size:17px;color:var(--text-dim);">chat_bubble_outline</span>
       <span class="title">${chat.title}</span>
-      <button class="icon-btn" onclick="startRename('${chat.id}', event)" title="Rename"><span class="material-icons-outlined" style="font-size:15px;">edit</span></button>
-      <button class="icon-btn delete" onclick="deleteChat('${chat.id}', event)" title="Delete"><span class="material-icons-outlined" style="font-size:15px;">delete</span></button>
+      <button class="icon-btn" onclick="startRename('${chat.id}', event)" title="Rename" type="button"><span class="material-icons-outlined" style="font-size:15px;">edit</span></button>
+      <button class="icon-btn delete" onclick="deleteChat('${chat.id}', event)" title="Delete" type="button"><span class="material-icons-outlined" style="font-size:15px;">delete</span></button>
     `;
     listContainer.appendChild(item);
   });
@@ -415,13 +415,13 @@ function renderSidebar(){
 
 function parseMarkdown(text){
   if (!text) return "";
-  let escaped = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  let escaped = String(text).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   const codeBlockRegex = /```([a-zA-Z0-9_\-+]+)?\n([\s\S]*?)\n```/g;
   escaped = escaped.replace(codeBlockRegex, (match, lang, code)=>{
     const language = lang || 'code';
     return `</div><div class="code-container">
               <div class="code-header"><span>${language}</span>
-                <button class="copy-btn" onclick="copyCode(this)"><span class="material-icons-outlined" style="font-size:16px;">content_copy</span> Copy</button>
+                <button class="copy-btn" onclick="copyCode(this)" type="button"><span class="material-icons-outlined" style="font-size:16px;">content_copy</span> Copy</button>
               </div>
               <pre><code class="code-content">${code}</code></pre>
             </div><div class="message-text-block">`;
@@ -456,7 +456,6 @@ function renderMessageUI(role, text){
   container.appendChild(row);
 }
 
-// ===================== In-Chat + Button Handler =====================
 function handlePlusClick(){
   const input = document.getElementById("userInput");
   if (!input.value.startsWith("/video ")) {
@@ -466,10 +465,14 @@ function handlePlusClick(){
 }
 
 // =========================================================================
-// 🎬 60-SECOND EXACT PROGRESS BAR & VIDEO GENERATOR ENGINE
+// 🎬 REAL-TIME DYNAMIC VIDEO GENERATION ENGINE
 // =========================================================================
 async function handleVideoGeneration(videoPrompt) {
-  const currentChat = chatSessions.find(c => c.id === activeChatId);
+  let currentChat = chatSessions.find(c => c.id === activeChatId);
+  if (!currentChat) {
+    startNewChat();
+    currentChat = chatSessions.find(c => c.id === activeChatId);
+  }
   const container = document.getElementById("chatContainer");
   const cardId = "video_card_" + Date.now();
 
@@ -506,7 +509,6 @@ async function handleVideoGeneration(videoPrompt) {
   let videoResult = null;
   let errorReason = null;
 
-  // Smooth Progress Animation (0% -> 95%)
   let currentProgress = 0;
   const startTime = Date.now();
 
@@ -538,29 +540,20 @@ async function handleVideoGeneration(videoPrompt) {
     }
   }, 200);
 
-  // 🚀 Direct Multi-Source Fetch Pipeline
   try {
     let data = null;
-
-    // 1. Try Cloudflare Backend Proxy
     try {
       const res = await fetch(`/api/video?prompt=${encodeURIComponent(videoPrompt)}`);
-      if (res.ok) {
-        data = await res.json();
-      }
+      if (res.ok) data = await res.json();
     } catch (e) {}
 
-    // 2. Fallback to Vercel API if Cloudflare Proxy returned empty
     if (!data || !data.video_url) {
       try {
         const vRes = await fetch(`https://video-genarator-api.vercel.app/api/generate?prompt=${encodeURIComponent(videoPrompt)}`);
-        if (vRes.ok) {
-          data = await vRes.json();
-        }
+        if (vRes.ok) data = await vRes.json();
       } catch (e) {}
     }
 
-    // Process Result
     if (data && (data.video_url || (data.data && data.data.result))) {
       videoResult = {
         video_url: data.video_url || data.data.result,
@@ -577,7 +570,6 @@ async function handleVideoGeneration(videoPrompt) {
   isComplete = true;
   clearInterval(progressInterval);
 
-  // Finish and Render UI
   const pfill = document.getElementById(`pfill_${cardId}`);
   const ppct = document.getElementById(`ppct_${cardId}`);
   const ptime = document.getElementById(`ptime_${cardId}`);
@@ -613,7 +605,6 @@ async function handleVideoGeneration(videoPrompt) {
         saveState();
       }
 
-      // Auto AI Follow-up Message
       setTimeout(() => {
         const feedbackText = STRINGS[currentLang].videoFeedback;
         if (currentChat) {
@@ -633,6 +624,112 @@ async function handleVideoGeneration(videoPrompt) {
   }
   scrollToBottom();
 }
+
+// ===================== Send Message Router =====================
+async function sendMessage(){
+  const inputField = document.getElementById("userInput");
+  const prompt = inputField.value.trim();
+  if (!prompt) return;
+
+  let currentChat = chatSessions.find(c => c.id === activeChatId);
+  if (!currentChat) {
+    startNewChat();
+    currentChat = chatSessions.find(c => c.id === activeChatId);
+  }
+  if (!currentChat) return;
+
+  if (currentChat.messages.length === 0){
+    currentChat.title = prompt.length > 24 ? prompt.substring(0, 24) + "..." : prompt;
+    renderSidebar();
+  }
+  
+  currentChat.messages.push({role:"user", text:prompt});
+  renderMessageUI("user", prompt);
+  inputField.value = "";
+  saveState(); scrollToBottom();
+
+  const lowerPrompt = prompt.toLowerCase();
+  let videoPrompt = null;
+
+  if (lowerPrompt.startsWith("/video ")) {
+    videoPrompt = prompt.substring(7).trim();
+  } else if (lowerPrompt.startsWith("video ekak hadapan ") || lowerPrompt.startsWith("video ekak oni ") || lowerPrompt.startsWith("video ekak ona ")) {
+    videoPrompt = prompt.replace(/^(video ekak hadapan|video ekak oni|video ekak ona)\s*/i, "").trim();
+  } else if (lowerPrompt.startsWith("generate video ") || lowerPrompt.startsWith("make video ") || lowerPrompt.startsWith("create video ")) {
+    videoPrompt = prompt.replace(/^(generate video|make video|create video)\s*/i, "").trim();
+  }
+
+  if (videoPrompt && videoPrompt.length > 2) {
+    handleVideoGeneration(videoPrompt);
+    return;
+  }
+
+  // Rate Limiting
+  if (!isOwnerLoggedIn) {
+    const now = new Date();
+    const currentMin = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes();
+    const currentDay = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
+
+    let savedMin = localStorage.getItem("viru_min_timestamp");
+    let savedDay = localStorage.getItem("viru_day_timestamp");
+    let countMin = parseInt(localStorage.getItem("viru_msg_count_min") || "0");
+    let countDay = parseInt(localStorage.getItem("viru_msg_count_day") || "0");
+
+    if (savedMin !== currentMin) { countMin = 0; localStorage.setItem("viru_min_timestamp", currentMin); }
+    if (savedDay !== currentDay) { countDay = 0; localStorage.setItem("viru_day_timestamp", currentDay); }
+
+    if (countMin >= 8 || countDay >= 80) {
+      const limitMessage = STRINGS[currentLang].limitMsg;
+      currentChat.messages.push({role: "model", text: limitMessage});
+      renderMessageUI("model", limitMessage);
+      saveState(); scrollToBottom();
+      return;
+    }
+
+    localStorage.setItem("viru_msg_count_min", countMin + 1);
+    localStorage.setItem("viru_msg_count_day", countDay + 1);
+  }
+
+  const container = document.getElementById("chatContainer");
+  const loadingRow = document.createElement("div");
+  loadingRow.className = "chat-row ai-row";
+  loadingRow.innerHTML = `
+    <div class="avatar ai-avatar"><span class="material-icons-outlined" style="font-size:20px;">auto_awesome</span></div>
+    <div class="message-content"><div class="loading-stars"><div class="star"></div><div class="star"></div><div class="star"></div></div></div>`;
+  container.appendChild(loadingRow);
+  scrollToBottom();
+
+  const historyPayload = currentChat.messages
+    .filter(m => m.type !== "video")
+    .map(msg=>({ role: msg.role==="user" ? "user" : "model", parts: [{text: msg.text}] }));
+
+  try {
+    const response = await fetch(CLOUDFLARE_CHAT_URL, {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization": authToken ? `Bearer ${authToken}` : ""
+      },
+      body: JSON.stringify({ historyPayload, isOwnerLoggedIn, lang: currentLang })
+    });
+    const data = await response.json();
+    loadingRow.remove();
+
+    if (data.reply){
+      currentChat.messages.push({role:"model", text:data.reply});
+      renderMessageUI("model", data.reply);
+      saveState();
+    } else if (data.error){
+      renderMessageUI("model", `${STRINGS[currentLang].errOccurred} ${data.error}`);
+    }
+    scrollToBottom();
+  } catch(err){
+    loadingRow.remove();
+    renderMessageUI("model", STRINGS[currentLang].networkErr);
+    scrollToBottom();
+  }
+}
+
 // ===================== Admin Authentication =====================
 function openLoginModal(){ document.getElementById("loginModal").classList.add("active"); document.getElementById("usernameInput").focus(); }
 function closeLoginModal(){ document.getElementById("loginModal").classList.remove("active"); }
@@ -695,7 +792,7 @@ function updateAuthUI(){
   if (isOwnerLoggedIn){
     authArea.innerHTML = `
       <div class="owner-badge"><span class="material-icons-outlined" style="font-size:16px;">workspace_premium</span> ${s.ownerMode}</div>
-      <button class="icon-only-btn" onclick="handleLogout()" title="${s.logout}"><span class="material-icons-outlined" style="font-size:18px;">logout</span></button>
+      <button class="icon-only-btn" onclick="handleLogout()" title="${s.logout}" type="button"><span class="material-icons-outlined" style="font-size:18px;">logout</span></button>
     `;
   } else {
     authArea.innerHTML = "";
@@ -726,7 +823,12 @@ function scrollToBottom(){
   const container = document.getElementById("chatContainer");
   container.scrollTop = container.scrollHeight;
 }
-function checkEnter(event){ if (event.key === "Enter") sendMessage(); }
+function checkEnter(event){ 
+  if (event.key === "Enter") {
+    event.preventDefault();
+    sendMessage();
+  }
+}
 </script>
 </body>
 </html>
