@@ -493,7 +493,7 @@ async function handleVideoGeneration(videoPrompt) {
           <div class="progress-bar-bg">
             <div class="progress-bar-fill" id="pfill_${cardId}"></div>
           </div>
-          <div style="font-size:11px;color:var(--text-dim);margin-top:6px;text-align:right;" id="ptime_${cardId}">60s remaining</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:6px;text-align:right;" id="ptime_${cardId}">Generating video...</div>
         </div>
 
         <div id="pcontent_${cardId}"></div>
@@ -502,231 +502,137 @@ async function handleVideoGeneration(videoPrompt) {
   container.appendChild(videoRow);
   scrollToBottom();
 
-  let finalVideoUrl = null;
-  let finalDownloadUrl = null;
+  let isComplete = false;
+  let videoResult = null;
+  let errorReason = null;
 
-  // 🔄 Multi-Level Video Fetcher
-  async function fetchVideoFromEngines() {
-    // 1. First Priority: Your Vercel API
-    try {
-      const vRes = await fetch(`https://video-genarator-api.vercel.app/api/generate?prompt=${encodeURIComponent(videoPrompt)}`);
-      const vData = await vRes.json();
-      if (vData && vData.status && vData.video_url) {
-        finalVideoUrl = vData.video_url;
-        finalDownloadUrl = vData.download_url || vData.video_url;
-        return;
-      }
-    } catch (e) {
-      console.log("Vercel API attempt failed, switching to direct engine...");
-    }
-
-    // 2. Second Priority: Direct Engine Fallback
-    try {
-      const aRes = await fetch(`https://anabot.my.id/api/ai/text2video?prompt=${encodeURIComponent(videoPrompt)}&apikey=freeApikey`);
-      const aData = await aRes.json();
-      if (aData && aData.success && aData.data && aData.data.result) {
-        finalVideoUrl = aData.data.result;
-        finalDownloadUrl = aData.data.result;
-        return;
-      }
-    } catch (e) {
-      console.log("Direct engine attempt failed...");
-    }
-
-    // 3. Third Priority: Cloudflare Function Proxy
-    try {
-      const cRes = await fetch(`/api/video?prompt=${encodeURIComponent(videoPrompt)}`);
-      const cData = await cRes.json();
-      if (cData && cData.video_url) {
-        finalVideoUrl = cData.video_url;
-        finalDownloadUrl = cData.download_url || cData.video_url;
-      }
-    } catch (e) {}
-  }
-
-  // Start background fetching immediately
-  fetchVideoFromEngines();
-
-  // ⏱️ 60-Second Exact Timer (60000ms)
-  const TOTAL_DURATION = 60000;
+  // Smooth Progress Animation (0% -> 95%)
+  let currentProgress = 0;
   const startTime = Date.now();
 
   const progressInterval = setInterval(() => {
+    if (isComplete) return;
+
     const elapsed = Date.now() - startTime;
-    let percentage = Math.min(100, Math.floor((elapsed / TOTAL_DURATION) * 100));
-    let remainingSec = Math.max(0, Math.ceil((TOTAL_DURATION - elapsed) / 1000));
+    if (currentProgress < 95) {
+      currentProgress = Math.min(95, Math.floor((elapsed / 35000) * 95));
+    }
 
     const pfill = document.getElementById(`pfill_${cardId}`);
     const ppct = document.getElementById(`ppct_${cardId}`);
     const ptime = document.getElementById(`ptime_${cardId}`);
     const pstatus = document.getElementById(`pstatus_${cardId}`);
 
-    if (pfill) pfill.style.width = percentage + "%";
-    if (ppct) ppct.innerText = percentage + "%";
-    if (ptime) ptime.innerText = remainingSec + "s remaining";
+    if (pfill) pfill.style.width = currentProgress + "%";
+    if (ppct) ppct.innerText = currentProgress + "%";
 
-    if (percentage < 30) {
-      if (pstatus) pstatus.innerText = "⚡ Initializing AI Neural Engine...";
-    } else if (percentage < 70) {
-      if (pstatus) pstatus.innerText = "🎬 Rendering 9:16 Video Frames...";
-    } else if (percentage < 99) {
-      if (pstatus) pstatus.innerText = "✨ Finalizing High-Res Output...";
+    const remainingSec = Math.max(1, 45 - Math.floor(elapsed / 1000));
+    if (ptime) ptime.innerText = `Estimated: ~${remainingSec}s`;
+
+    if (currentProgress < 35 && pstatus) {
+      pstatus.innerText = "⚡ Initializing AI Neural Engine...";
+    } else if (currentProgress < 75 && pstatus) {
+      pstatus.innerText = "🎬 Rendering 9:16 Video Frames...";
+    } else if (currentProgress >= 75 && pstatus) {
+      pstatus.innerText = "✨ Finalizing High-Res Output...";
     }
+  }, 200);
 
-    // When exact 60 seconds are reached
-    if (elapsed >= TOTAL_DURATION) {
-      clearInterval(progressInterval);
-      if (ppct) ppct.innerText = "100%";
-      if (pfill) pfill.style.width = "100%";
-      if (ptime) ptime.innerText = "Completed!";
-      if (pstatus) pstatus.innerText = "🎉 Video Ready!";
-
-      setTimeout(() => {
-        const pbox = document.getElementById(`pbox_${cardId}`);
-        const pcontent = document.getElementById(`pcontent_${cardId}`);
-        if (pbox) pbox.style.display = "none";
-
-        if (finalVideoUrl) {
-          pcontent.innerHTML = `
-            <div class="video-player-box">
-              <video src="${finalVideoUrl}" controls autoplay loop playsinline></video>
-            </div>
-            <a href="${finalDownloadUrl}" target="_blank" class="download-video-btn">
-              <span class="material-icons-outlined" style="font-size:18px;">download</span> Download MP4 (9:16)
-            </a>`;
-          
-          if (currentChat) {
-            currentChat.messages.push({
-              type: "video",
-              prompt: videoPrompt,
-              video_url: finalVideoUrl,
-              download_url: finalDownloadUrl
-            });
-            saveState();
-          }
-
-          // Follow-up Auto AI Comment
-          setTimeout(() => {
-            const feedbackText = STRINGS[currentLang].videoFeedback;
-            if (currentChat) {
-              currentChat.messages.push({ role: "model", text: feedbackText });
-              renderMessageUI("model", feedbackText);
-              saveState();
-              scrollToBottom();
-            }
-          }, 600);
-
-        } else {
-          pcontent.innerHTML = `<div style="color:#ef4444;font-size:13px;padding:10px 0;">⚠️ Video generation failed. Please try again.</div>`;
-        }
-        scrollToBottom();
-      }, 500);
-    }
-  }, 100);
-}
-
-// ===================== Send Message Router =====================
-async function sendMessage(){
-  const inputField = document.getElementById("userInput");
-  const prompt = inputField.value.trim();
-  if (!prompt) return;
-  const currentChat = chatSessions.find(c=>c.id===activeChatId);
-  if (!currentChat) return;
-
-  if (currentChat.messages.length === 0){
-    currentChat.title = prompt.length>24 ? prompt.substring(0,24)+"..." : prompt;
-    renderSidebar();
-  }
-  
-  currentChat.messages.push({role:"user", text:prompt});
-  renderMessageUI("user", prompt);
-  inputField.value = "";
-  saveState(); scrollToBottom();
-
-  // Check if user is asking for video generation
-  const lowerPrompt = prompt.toLowerCase();
-  let videoPrompt = null;
-
-  if (lowerPrompt.startsWith("/video ")) {
-    videoPrompt = prompt.substring(7).trim();
-  } else if (lowerPrompt.startsWith("video ekak hadapan ") || lowerPrompt.startsWith("video ekak oni ") || lowerPrompt.startsWith("video ekak ona ")) {
-    videoPrompt = prompt.replace(/^(video ekak hadapan|video ekak oni|video ekak ona)\s*/i, "").trim();
-  } else if (lowerPrompt.startsWith("generate video ") || lowerPrompt.startsWith("make video ") || lowerPrompt.startsWith("create video ")) {
-    videoPrompt = prompt.replace(/^(generate video|make video|create video)\s*/i, "").trim();
-  }
-
-  if (videoPrompt && videoPrompt.length > 2) {
-    handleVideoGeneration(videoPrompt);
-    return;
-  }
-
-  // Rate limiting for guest users
-  if (!isOwnerLoggedIn) {
-    const now = new Date();
-    const currentMin = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes();
-    const currentDay = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
-
-    let savedMin = localStorage.getItem("viru_min_timestamp");
-    let savedDay = localStorage.getItem("viru_day_timestamp");
-    let countMin = parseInt(localStorage.getItem("viru_msg_count_min") || "0");
-    let countDay = parseInt(localStorage.getItem("viru_msg_count_day") || "0");
-
-    if (savedMin !== currentMin) { countMin = 0; localStorage.setItem("viru_min_timestamp", currentMin); }
-    if (savedDay !== currentDay) { countDay = 0; localStorage.setItem("viru_day_timestamp", currentDay); }
-
-    if (countMin >= 8 || countDay >= 80) {
-      const limitMessage = STRINGS[currentLang].limitMsg;
-      currentChat.messages.push({role: "model", text: limitMessage});
-      renderMessageUI("model", limitMessage);
-      saveState(); scrollToBottom();
-      return;
-    }
-
-    localStorage.setItem("viru_msg_count_min", countMin + 1);
-    localStorage.setItem("viru_msg_count_day", countDay + 1);
-  }
-
-  // AI Loading Animation
-  const container = document.getElementById("chatContainer");
-  const loadingRow = document.createElement("div");
-  loadingRow.className = "chat-row ai-row";
-  loadingRow.innerHTML = `
-    <div class="avatar ai-avatar"><span class="material-icons-outlined" style="font-size:20px;">auto_awesome</span></div>
-    <div class="message-content"><div class="loading-stars"><div class="star"></div><div class="star"></div><div class="star"></div></div></div>`;
-  container.appendChild(loadingRow);
-  scrollToBottom();
-
-  const historyPayload = currentChat.messages
-    .filter(m => m.type !== "video")
-    .map(msg=>({ role: msg.role==="user" ? "user" : "model", parts: [{text: msg.text}] }));
-
+  // 🚀 Direct Multi-Source Fetch Pipeline
   try {
-    const response = await fetch(CLOUDFLARE_CHAT_URL, {
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization": authToken ? `Bearer ${authToken}` : ""
-      },
-      body: JSON.stringify({ historyPayload, isOwnerLoggedIn, lang: currentLang })
-    });
-    const data = await response.json();
-    loadingRow.remove();
+    let data = null;
 
-    if (data.reply){
-      currentChat.messages.push({role:"model", text:data.reply});
-      renderMessageUI("model", data.reply);
-      saveState();
-    } else if (data.error){
-      renderMessageUI("model", `${STRINGS[currentLang].errOccurred} ${data.error}`);
+    // 1. Try Cloudflare Backend Proxy
+    try {
+      const res = await fetch(`/api/video?prompt=${encodeURIComponent(videoPrompt)}`);
+      if (res.ok) {
+        data = await res.json();
+      }
+    } catch (e) {}
+
+    // 2. Fallback to Vercel API if Cloudflare Proxy returned empty
+    if (!data || !data.video_url) {
+      try {
+        const vRes = await fetch(`https://video-genarator-api.vercel.app/api/generate?prompt=${encodeURIComponent(videoPrompt)}`);
+        if (vRes.ok) {
+          data = await vRes.json();
+        }
+      } catch (e) {}
     }
-    scrollToBottom();
-  } catch(err){
-    loadingRow.remove();
-    renderMessageUI("model", STRINGS[currentLang].networkErr);
-    scrollToBottom();
-  }
-}
 
+    // Process Result
+    if (data && (data.video_url || (data.data && data.data.result))) {
+      videoResult = {
+        video_url: data.video_url || data.data.result,
+        download_url: data.download_url || data.video_url || data.data.result
+      };
+    } else {
+      errorReason = (data && (data.error || data.message)) || "AI Engine failed to generate video";
+    }
+
+  } catch (err) {
+    errorReason = "Network Error: " + err.message;
+  }
+
+  isComplete = true;
+  clearInterval(progressInterval);
+
+  // Finish and Render UI
+  const pfill = document.getElementById(`pfill_${cardId}`);
+  const ppct = document.getElementById(`ppct_${cardId}`);
+  const ptime = document.getElementById(`ptime_${cardId}`);
+  const pstatus = document.getElementById(`pstatus_${cardId}`);
+  const pbox = document.getElementById(`pbox_${cardId}`);
+  const pcontent = document.getElementById(`pcontent_${cardId}`);
+
+  if (videoResult && videoResult.video_url) {
+    if (pfill) pfill.style.width = "100%";
+    if (ppct) ppct.innerText = "100%";
+    if (ptime) ptime.innerText = "Completed!";
+    if (pstatus) pstatus.innerText = "🎉 Video Ready!";
+
+    setTimeout(() => {
+      if (pbox) pbox.style.display = "none";
+      if (pcontent) {
+        pcontent.innerHTML = `
+          <div class="video-player-box">
+            <video src="${videoResult.video_url}" controls autoplay loop playsinline></video>
+          </div>
+          <a href="${videoResult.download_url}" target="_blank" class="download-video-btn">
+            <span class="material-icons-outlined" style="font-size:18px;">download</span> Download MP4 (9:16)
+          </a>`;
+      }
+
+      if (currentChat) {
+        currentChat.messages.push({
+          type: "video",
+          prompt: videoPrompt,
+          video_url: videoResult.video_url,
+          download_url: videoResult.download_url
+        });
+        saveState();
+      }
+
+      // Auto AI Follow-up Message
+      setTimeout(() => {
+        const feedbackText = STRINGS[currentLang].videoFeedback;
+        if (currentChat) {
+          currentChat.messages.push({ role: "model", text: feedbackText });
+          renderMessageUI("model", feedbackText);
+          saveState();
+          scrollToBottom();
+        }
+      }, 500);
+    }, 400);
+
+  } else {
+    if (pbox) pbox.style.display = "none";
+    if (pcontent) {
+      pcontent.innerHTML = `<div style="color:#ef4444;font-size:13px;padding:10px 0;">⚠️ ${errorReason}</div>`;
+    }
+  }
+  scrollToBottom();
+}
 // ===================== Admin Authentication =====================
 function openLoginModal(){ document.getElementById("loginModal").classList.add("active"); document.getElementById("usernameInput").focus(); }
 function closeLoginModal(){ document.getElementById("loginModal").classList.remove("active"); }
