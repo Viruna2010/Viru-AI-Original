@@ -1,8 +1,6 @@
 /**
  * ====================================================
- *  VIRU AI - Video Generator Cloudflare Backend Router
- *  Main Engine: Vercel API (video-genarator-api.vercel.app)
- *  Fallback Engine: Upstream Backup
+ *  VIRU AI - Server-Side Video Pipeline (Zero CORS)
  *  Creator: Viruna Randinu | Brand: VIRU AI
  * ====================================================
  */
@@ -12,7 +10,7 @@ export async function onRequestGet(context) {
   const url = new URL(request.url);
   const prompt = url.searchParams.get("prompt");
 
-  const securityHeaders = {
+  const headers = {
     "Content-Type": "application/json; charset=utf-8",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, OPTIONS",
@@ -21,43 +19,18 @@ export async function onRequestGet(context) {
   };
 
   if (!prompt || prompt.trim() === "") {
-    return new Response(JSON.stringify({ status: false, error: "Prompt is required" }), {
-      headers: securityHeaders,
-      status: 400
-    });
+    return new Response(JSON.stringify({ status: false, error: "Prompt is required" }), { headers, status: 400 });
   }
 
-  // ==========================================
-  // 1. MAIN API: VERCEL SERVERLESS ENDPOINT
-  // ==========================================
+  const API_KEY = env.ANABOT_API_KEY || "freeApikey";
+
   try {
-    const vercelUrl = `https://video-genarator-api.vercel.app/api/generate?prompt=${encodeURIComponent(prompt.trim())}`;
-    const vercelRes = await fetch(vercelUrl);
-    const vercelData = await vercelRes.json();
+    // Cloudflare Server එකෙන්ම කෙලින්ම Video එක ලබා ගැනීම
+    const targetUrl = `https://anabot.my.id/api/ai/text2video?prompt=${encodeURIComponent(prompt.trim())}&apikey=${encodeURIComponent(API_KEY)}`;
+    const response = await fetch(targetUrl);
+    const data = await response.json();
 
-    if (vercelData && vercelData.status && vercelData.video_url) {
-      return new Response(JSON.stringify(vercelData), {
-        headers: securityHeaders,
-        status: 200
-      });
-    }
-  } catch (vercelError) {
-    console.error("Vercel Main API error, switching to Fallback:", vercelError);
-  }
-
-  // ==========================================
-  // 2. FALLBACK API: UPSTREAM ENGINE
-  // ==========================================
-  try {
-    const finalPrompt = `${prompt.trim()}, 9:16 vertical aspect ratio, portrait video, tiktok reels format, high quality`;
-    const API_KEY = env.ANABOT_API_KEY || "freeApikey";
-    const fallbackUrl = `https://anabot.my.id/api/ai/text2video?prompt=${encodeURIComponent(finalPrompt)}&apikey=${encodeURIComponent(API_KEY)}`;
-    
-    const fallbackRes = await fetch(fallbackUrl);
-    const fallbackData = await fallbackRes.json();
-
-    if (fallbackData.success && fallbackData.data && fallbackData.data.result) {
-      const sourceVideoUrl = fallbackData.data.result;
+    if (data && data.success && data.data && data.data.result) {
       return new Response(JSON.stringify({
         creator: "Viruna Randinu",
         owner: "VIRU AI",
@@ -65,24 +38,26 @@ export async function onRequestGet(context) {
         service: "VIRU-AI Video Generator",
         aspect_ratio: "9:16",
         prompt: prompt.trim(),
-        video_url: sourceVideoUrl,
-        download_url: sourceVideoUrl
-      }), {
-        headers: securityHeaders,
-        status: 200
-      });
+        video_url: data.data.result,
+        download_url: data.data.result
+      }), { headers, status: 200 });
+    } else {
+      return new Response(JSON.stringify({
+        creator: "Viruna Randinu",
+        owner: "VIRU AI",
+        status: false,
+        error: "Upstream engine returned error",
+        raw: data
+      }), { headers, status: 502 });
     }
-  } catch (fallbackError) {
-    console.error("Fallback API error:", fallbackError);
-  }
 
-  return new Response(JSON.stringify({
-    creator: "Viruna Randinu",
-    owner: "VIRU AI",
-    status: false,
-    error: "Video generation failed on all pipelines. Please try again."
-  }), {
-    headers: securityHeaders,
-    status: 502
-  });
+  } catch (error) {
+    return new Response(JSON.stringify({
+      creator: "Viruna Randinu",
+      owner: "VIRU AI",
+      status: false,
+      error: "Server-side video fetch error",
+      details: error.message
+    }), { headers, status: 500 });
+  }
 }
