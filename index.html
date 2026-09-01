@@ -469,7 +469,7 @@ function handlePlusClick(){
 // 🎬 60-SECOND EXACT PROGRESS BAR & VIDEO GENERATOR ENGINE
 // =========================================================================
 async function handleVideoGeneration(videoPrompt) {
-  const currentChat = chatSessions.find(c=>c.id===activeChatId);
+  const currentChat = chatSessions.find(c => c.id === activeChatId);
   const container = document.getElementById("chatContainer");
   const cardId = "video_card_" + Date.now();
 
@@ -502,21 +502,52 @@ async function handleVideoGeneration(videoPrompt) {
   container.appendChild(videoRow);
   scrollToBottom();
 
-  let fetchedVideoData = null;
+  let finalVideoUrl = null;
+  let finalDownloadUrl = null;
 
-  // Background Fetch: Calls /api/video (Main Vercel -> Fallback Anabot)
-  fetch(`${VIDEO_API_URL}?prompt=${encodeURIComponent(videoPrompt)}`)
-    .then(res => res.json())
-    .then(data => {
-      if (data && data.status && data.video_url) {
-        fetchedVideoData = data;
+  // 🔄 Multi-Level Video Fetcher
+  async function fetchVideoFromEngines() {
+    // 1. First Priority: Your Vercel API
+    try {
+      const vRes = await fetch(`https://video-genarator-api.vercel.app/api/generate?prompt=${encodeURIComponent(videoPrompt)}`);
+      const vData = await vRes.json();
+      if (vData && vData.status && vData.video_url) {
+        finalVideoUrl = vData.video_url;
+        finalDownloadUrl = vData.download_url || vData.video_url;
+        return;
       }
-    })
-    .catch(err => {
-      console.log("Background generation polling error:", err);
-    });
+    } catch (e) {
+      console.log("Vercel API attempt failed, switching to direct engine...");
+    }
 
-  // 60-Second Exact Timer (60000ms)
+    // 2. Second Priority: Direct Engine Fallback
+    try {
+      const aRes = await fetch(`https://anabot.my.id/api/ai/text2video?prompt=${encodeURIComponent(videoPrompt)}&apikey=freeApikey`);
+      const aData = await aRes.json();
+      if (aData && aData.success && aData.data && aData.data.result) {
+        finalVideoUrl = aData.data.result;
+        finalDownloadUrl = aData.data.result;
+        return;
+      }
+    } catch (e) {
+      console.log("Direct engine attempt failed...");
+    }
+
+    // 3. Third Priority: Cloudflare Function Proxy
+    try {
+      const cRes = await fetch(`/api/video?prompt=${encodeURIComponent(videoPrompt)}`);
+      const cData = await cRes.json();
+      if (cData && cData.video_url) {
+        finalVideoUrl = cData.video_url;
+        finalDownloadUrl = cData.download_url || cData.video_url;
+      }
+    } catch (e) {}
+  }
+
+  // Start background fetching immediately
+  fetchVideoFromEngines();
+
+  // ⏱️ 60-Second Exact Timer (60000ms)
   const TOTAL_DURATION = 60000;
   const startTime = Date.now();
 
@@ -542,6 +573,7 @@ async function handleVideoGeneration(videoPrompt) {
       if (pstatus) pstatus.innerText = "✨ Finalizing High-Res Output...";
     }
 
+    // When exact 60 seconds are reached
     if (elapsed >= TOTAL_DURATION) {
       clearInterval(progressInterval);
       if (ppct) ppct.innerText = "100%";
@@ -554,12 +586,12 @@ async function handleVideoGeneration(videoPrompt) {
         const pcontent = document.getElementById(`pcontent_${cardId}`);
         if (pbox) pbox.style.display = "none";
 
-        if (fetchedVideoData && fetchedVideoData.video_url) {
+        if (finalVideoUrl) {
           pcontent.innerHTML = `
             <div class="video-player-box">
-              <video src="${fetchedVideoData.video_url}" controls autoplay loop playsinline></video>
+              <video src="${finalVideoUrl}" controls autoplay loop playsinline></video>
             </div>
-            <a href="${fetchedVideoData.download_url || fetchedVideoData.video_url}" target="_blank" class="download-video-btn">
+            <a href="${finalDownloadUrl}" target="_blank" class="download-video-btn">
               <span class="material-icons-outlined" style="font-size:18px;">download</span> Download MP4 (9:16)
             </a>`;
           
@@ -567,13 +599,13 @@ async function handleVideoGeneration(videoPrompt) {
             currentChat.messages.push({
               type: "video",
               prompt: videoPrompt,
-              video_url: fetchedVideoData.video_url,
-              download_url: fetchedVideoData.download_url || fetchedVideoData.video_url
+              video_url: finalVideoUrl,
+              download_url: finalDownloadUrl
             });
             saveState();
           }
 
-          // Auto AI Follow-up Comment right after video completion
+          // Follow-up Auto AI Comment
           setTimeout(() => {
             const feedbackText = STRINGS[currentLang].videoFeedback;
             if (currentChat) {
@@ -585,36 +617,12 @@ async function handleVideoGeneration(videoPrompt) {
           }, 600);
 
         } else {
-          pcontent.innerHTML = `<div style="color:#ef4444;font-size:13px;padding:10px 0;">⚠️ Video generation failed. Please try again with a descriptive prompt.</div>`;
+          pcontent.innerHTML = `<div style="color:#ef4444;font-size:13px;padding:10px 0;">⚠️ Video generation failed. Please try again.</div>`;
         }
         scrollToBottom();
       }, 500);
     }
   }, 100);
-}
-
-function renderVideoCardUI(prompt, videoUrl, downloadUrl) {
-  const container = document.getElementById("chatContainer");
-  const videoRow = document.createElement("div");
-  videoRow.className = "chat-row ai-row";
-  videoRow.innerHTML = `
-    <div class="avatar ai-avatar"><span class="material-icons-outlined" style="font-size:20px;">movie</span></div>
-    <div class="message-content">
-      <div class="video-card">
-        <div class="video-card-header">
-          <div class="video-card-title"><span class="material-icons-outlined" style="font-size:17px;">auto_awesome</span> VIRU AI Video Generator</div>
-          <span style="font-size:11px;background:#1e293b;padding:2px 8px;border-radius:6px;">9:16</span>
-        </div>
-        <div style="font-size:13px;margin-bottom:12px;color:var(--text);font-style:italic;">"${prompt}"</div>
-        <div class="video-player-box">
-          <video src="${videoUrl}" controls loop playsinline></video>
-        </div>
-        <a href="${downloadUrl}" target="_blank" class="download-video-btn">
-          <span class="material-icons-outlined" style="font-size:18px;">download</span> Download MP4 (9:16)
-        </a>
-      </div>
-    </div>`;
-  container.appendChild(videoRow);
 }
 
 // ===================== Send Message Router =====================
